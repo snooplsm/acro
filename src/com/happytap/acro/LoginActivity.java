@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ public class LoginActivity extends Activity {
   AsyncFacebookRunner mAsyncRunner;
   Configuration configuration;
 
+  private ProgressDialog progressDialog;
+  
   private SharedPreferences mPrefs;
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,9 @@ public class LoginActivity extends Activity {
     mAsyncRunner = new AsyncFacebookRunner(facebook);
 
     mPrefs = getPreferences(MODE_PRIVATE);
-    String access_token = mPrefs.getString("access_token", null);
-    long expires = mPrefs.getLong("access_expires", 0);
+    
+    String access_token = mPrefs.getString("fb_token", null);
+    long expires = mPrefs.getLong("fb_expires", 0);
     if (access_token != null) {
       facebook.setAccessToken(access_token);
     }
@@ -46,6 +50,7 @@ public class LoginActivity extends Activity {
     }
 
     if (facebook.isSessionValid()) {
+      progressDialog = ProgressDialog.show(LoginActivity.this, "", "Loading...");
       mAsyncRunner.request("me", meListener);
     }
 
@@ -55,13 +60,20 @@ public class LoginActivity extends Activity {
     Intent intent = new Intent(LoginActivity.this, AcroActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
+
+    progressDialog.dismiss();
+    finish();
   }
 
   public void onFacebookLoginClick(View view) {
 
     facebook.authorize(this, new DialogListener() {
       @Override public void onComplete(Bundle values) {
-        configuration.setFacebook(facebook);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString("fb_token", facebook.getAccessToken());
+        editor.putLong("fb_expires", facebook.getAccessExpires());
+        editor.commit();
+        progressDialog = ProgressDialog.show(LoginActivity.this, "", "Loading...");
         mAsyncRunner.request("me", meListener);
       }
 
@@ -89,13 +101,21 @@ public class LoginActivity extends Activity {
       startAcroActivity();
     }
     
-    @Override public void onMalformedURLException(MalformedURLException e, Object state) {}
+    @Override public void onMalformedURLException(MalformedURLException e, Object state) {
+      progressDialog.dismiss();
+    }
     
-    @Override public void onIOException(IOException e, Object state) {}
+    @Override public void onIOException(IOException e, Object state) {
+      progressDialog.dismiss();
+    }
     
-    @Override public void onFileNotFoundException(FileNotFoundException e, Object state) {}
+    @Override public void onFileNotFoundException(FileNotFoundException e, Object state) {
+      progressDialog.dismiss();
+    }
     
-    @Override public void onFacebookError(FacebookError e, Object state) {}
+    @Override public void onFacebookError(FacebookError e, Object state) {
+      progressDialog.dismiss();
+    }
     
   };
 
