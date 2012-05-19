@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="45dp"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/username"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_centerVertical="true"
+        android:ellipsize="marquee"
+        />
+    
+    <ImageView 
+        android:layout_toRightOf="@id/username"
+        android:id="@+id/voted_for"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:src="@android:drawable/btn_star_big_on"
+        />
+
+    <TextView android:id="@+id/index"
+        android:layout_toRightOf="@id/voted_for"
+        android:text="1"
+        android:layout_width="30dp"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_height="30dp"/>
+
+    <TextView android:id="@+id/text"
+        android:layout_toRightOf="@id/index"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:text="Where should I go for donuts?"/>
+    
+</RelativeLayout>

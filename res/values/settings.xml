@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<item name="isTest" type="bool">true</item>
+	<item name="secondsPerRound" type="integer">5</item>
+	<item name="secondsPerVotingRound" type="integer">5</item>
+	<string name="serverUrl">ws://10.11.0.118:8080/websocket</string>
+	<string name="facebookAppId">298308096910188</string>
+	<string name="facebookAppSecret">c252b1756cc4306efa879b9551bf8ae</string>
+	<item name="log" type="bool">true</item>
+	    
+</resources>
