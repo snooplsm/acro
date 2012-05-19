@@ -16,14 +16,17 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,7 +57,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	AcroAdapter _adapter;
 
-	View _chat;
+	LinearLayout _chat;
 
 	ChatAdapter _chatAdapter;
 
@@ -90,7 +93,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				_client.connect();
 			} catch (Exception e) {
 				if (e instanceof SocketException) {
-					// runOnUiThread(_socketDroppedRunnable);
+					runOnUiThread(_socketDroppedRunnable);
 				}
 			}
 		};
@@ -199,7 +202,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	Runnable _socketDroppedRunnable = new Runnable() {
 		public void run() {
-			_socketDroppedRound.setVisibility(View.VISIBLE);
+			
+			//_socketDroppedRound.setVisibility(View.VISIBLE);
 		};
 	};
 
@@ -315,10 +319,32 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	}
 
+	private boolean showUsers;
+
 	@Override
 	public void onClick(View v) {
-
-		startConnectionToServer();
+		if (v == _chat) {
+			showUsers = !showUsers;
+			_chat.removeAllViews();
+			final String text;
+			if (showUsers) {
+				text = "CHAT";
+			} else {
+				text = "USERS";
+			}
+			for (int i = 0; i < text.length(); i++) {
+				TextView t = new TextView(this);
+				t.setText(String.valueOf(text.charAt(i)));
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				lp.gravity = Gravity.CENTER;
+				t.setGravity(Gravity.CENTER);
+				_chat.addView(t, lp);
+			}
+			_chat.invalidate();
+		} else {
+			startConnectionToServer();
+		}
 	}
 
 	@Override
@@ -328,6 +354,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onConnected() {
+		runOnUiThread(_onUiJoinRoomRunnable);
+		//runOnUiThread(_joinRoomRound);
+		//startJoinRoomRound();
+		//startChatRound();
 		// startSentenceRound();
 		// runOnUiThread(_roundUiRunnable);
 	}
@@ -360,6 +390,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chatText = findView(R.id.chat_text);
 		_chatText.setOnKeyListener(this);
 		_chat = findView(R.id.chat);
+		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_joinRoomRound = findView(R.id.join_room);
@@ -379,9 +410,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// imm.showSoftInputFromInputMethod(one.getApplicationWindowToken(), 0);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 		_facebook = new Facebook(_config.getFacebookAppId());
-		// startConnectionToServer();
-		// startJoinRoomRound();
-		startSentenceRound();
+		startConnectionToServer();
+		//startJoinRoomRound();
+		//startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
 
@@ -389,7 +420,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onDisconnected() {
-		// runOnUiThread(_socketDroppedRunnable);
+		runOnUiThread(_socketDroppedRunnable);
 	}
 
 	@Override
@@ -545,12 +576,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void startJoinRoomRound() {
-
-		_rooms.setVisibility(View.VISIBLE);
-		_votingRound.setVisibility(View.GONE);
-		_chatRound.setVisibility(View.GONE);
-		_socketDroppedRound.setVisibility(View.GONE);
-		_sentenceRound.setVisibility(View.GONE);
+		hideAllViews();
+		_joinRoomRound.setVisibility(View.VISIBLE);
+		//_rooms.setVisibility(View.VISIBLE);
+		_root.invalidate();
 		_rooms.setOnItemClickListener(this);
 	}
 
@@ -591,19 +620,19 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void killAllTasks() {
-		if(_requestRoomListFuture!=null) {
+		if (_requestRoomListFuture != null) {
 			_requestRoomListFuture.cancel(true);
 		}
-		if(_connectionRunnableFuture!=null) {
+		if (_connectionRunnableFuture != null) {
 			_connectionRunnableFuture.cancel(true);
 		}
-		if(_joinRoomRequestFuture!=null) {
+		if (_joinRoomRequestFuture != null) {
 			_joinRoomRequestFuture.cancel(true);
 		}
-		if(_sentenceRoundRunnableFuture!=null) {
+		if (_sentenceRoundRunnableFuture != null) {
 			_sentenceRoundRunnableFuture.cancel(true);
 		}
-		if(_votingRoundRunnableFuture!=null) {
+		if (_votingRoundRunnableFuture != null) {
 			_votingRoundRunnableFuture.cancel(true);
 		}
 	}

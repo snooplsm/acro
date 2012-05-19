@@ -4,4 +4,18 @@
     <string name="hello">Hello World, AcroActivity!</string>
     <string name="app_name">Acro</string>
 
+    <string-array name="rounds">
+        <item>Baseball</item>
+        <item>Soccer</item>
+        <item>Football</item>
+        <item>Television</item>
+        <item>Internet</item>
+        <item>Memes</item>
+        <item>Presidential</item>
+        <item>STDs</item>
+        <item>Games</item>
+        <item>Playstation</item>
+        <item>Food</item>
+    </string-array>
+
 </resources>

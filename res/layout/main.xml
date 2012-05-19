@@ -32,7 +32,85 @@
         android:id="@+id/chat_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone" >
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:id="@+id/header_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="7 Letter Round"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="5"
+                android:text="60"
+                android:textColor="#FF0000"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/timer"
+                android:layout_toRightOf="@id/info"
+                android:indeterminate="false"
+                android:max="60000"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:progress="0" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/subheader_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header_container" >
+
+            <RelativeLayout
+                android:id="@+id/answers"
+                android:layout_width="100dp"
+                android:layout_height="60dp" >
+
+                <TextView
+                    android:id="@+id/answers_accepted_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="bottom"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="10dp"
+                    android:shadowColor="#000000"
+                    android:shadowRadius="3"
+                    android:text="Waiting for round to end..."
+                    android:textSize="10dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="General" />
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/chat_text"
@@ -43,15 +121,16 @@
         <ListView
             android:id="@+id/chat_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@id/chat_text" />
+            android:layout_height="wrap_content"
+            android:layout_above="@id/chat_text"
+            android:layout_below="@id/subheader_container" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/sentance_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <RelativeLayout
             android:id="@+id/header_container"
@@ -135,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="Microsoft" />
+                android:text="General" />
         </RelativeLayout>
 
         <TextView

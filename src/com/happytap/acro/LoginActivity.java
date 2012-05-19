@@ -45,6 +45,7 @@ public class LoginActivity extends Activity {
 
   private void startAcroActivity() {
     Intent intent = new Intent(LoginActivity.this, AcroActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
   }
 
