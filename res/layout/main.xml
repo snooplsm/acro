@@ -32,7 +32,7 @@
         android:id="@+id/chat_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <RelativeLayout
             android:id="@+id/header_container"
@@ -96,8 +96,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:gravity="bottom"
-                    android:paddingLeft="5dp"
                     android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
                     android:shadowColor="#000000"
                     android:shadowRadius="3"
                     android:text="Waiting for round to end..."
@@ -438,6 +438,72 @@
             android:layout_centerInParent="true"
             android:text="Socket dropped."
             android:textSize="30dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/choose_category_round"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible" >
+
+       <RelativeLayout
+            android:id="@+id/header_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Choose Category"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/category_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="5"
+                android:text="60"
+                android:textColor="#FF0000"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/category_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/timer"
+                android:layout_toRightOf="@id/info"
+                android:indeterminate="false"
+                android:max="60000"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:progress="0" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/subheader_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header_container" >
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/categories"
+            android:layout_below="@id/subheader_container"
+            android:layout_alignParentBottom="true"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
     </RelativeLayout>
 
     <TextView

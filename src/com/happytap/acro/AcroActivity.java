@@ -5,7 +5,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -32,20 +31,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
 import com.happytap.acro.AcroAdapter.State;
 
 public class AcroActivity extends Activity implements OnItemClickListener,
-		AcroListener, DialogListener, View.OnClickListener, View.OnKeyListener {
+		AcroListener, View.OnClickListener, View.OnKeyListener {
 
 	private String __ipAddress;
-
-	String __myUserId = UUID.randomUUID().toString();
-
-	String __myVoteForAcronymId = "";
 
 	Room __room;
 
@@ -101,14 +93,12 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	Future<?> _connectionRunnableFuture, _requestRoomListFuture;
 
-	Facebook _facebook;
-
 	TextView _ipAddress;
 
 	Runnable _joinRoomRequest = new Runnable() {
 		public void run() {
 			try {
-				_client.joinRoom(__myUserId, __room);
+				_client.joinRoom(Configuration.me.id, __room);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -134,6 +124,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	};
 
 	ProgressBar _progress;
+	
+	View _chooseCategoryRound;
 
 	Runnable _requestRoomList = new Runnable() {
 		public void run() {
@@ -163,7 +155,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _sendChatMessage = new Runnable() {
 		public void run() {
 			try {
-				_client.chat("ryan", __myUserId, __room, _chatText.getText()
+				_client.chat("ryan", Configuration.me.id, __room, _chatText.getText()
 						.toString());
 				runOnUiThread(_clearChatMessage);
 			} catch (Exception e) {
@@ -301,6 +293,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_socketDroppedRound.setVisibility(View.GONE);
 		_sentenceRound.setVisibility(View.GONE);
 		_resultsRound.setVisibility(View.GONE);
+		_chooseCategoryRound.setVisibility(View.GONE);
 	}
 
 	private void joinRoom(Room room) {
@@ -311,12 +304,6 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		_joinRoomRequestFuture = ThreadHelper.getScheduler().submit(
 				_joinRoomRequest);
-	}
-
-	@Override
-	public void onCancel() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private boolean showUsers;
@@ -345,11 +332,6 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		} else {
 			startConnectionToServer();
 		}
-	}
-
-	@Override
-	public void onComplete(Bundle values) {
-		System.out.println(values);
 	}
 
 	@Override
@@ -397,6 +379,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_resultsRound = findView(R.id.results_round);
 		_resultsProgress = findView(R.id.results_progress_bar);
 		_resultsText = findView(R.id.results_timer);
+		_chooseCategoryRound = findView(R.id.choose_category_round);
 
 		// two = findView(R.id.two);
 
@@ -409,10 +392,12 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// getSystemService(Context.INPUT_METHOD_SERVICE);
 		// imm.showSoftInputFromInputMethod(one.getApplicationWindowToken(), 0);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-		_facebook = new Facebook(_config.getFacebookAppId());
 		startConnectionToServer();
 		//startJoinRoomRound();
 		//startSentenceRound();
+		// startConnectionToServer();
+		// startJoinRoomRound();
+		startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
 
@@ -424,18 +409,6 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	@Override
-	public void onError(DialogError e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onFacebookError(FacebookError e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position,
 			long arg3) {
 		if (adapter == _rooms) {
@@ -444,7 +417,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		if (adapter == _acronyms) {
 			Acronym acronym = (Acronym) adapter.getItemAtPosition(position);
-			if (!acronym.getUserId().equals(__myUserId)) {
+			if (!acronym.getUserId().equals(Configuration.me.id)) {
 				voteForAcronym(acronym);
 			}
 		}
@@ -498,7 +471,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	public void onVotesIn(List<Acronym> acronyms) {
 		_acronyms = acronyms;
-		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 	public void onVotingRoundOver() {
@@ -547,7 +520,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		__state = State.RESULTS;
 		_acros.setOnItemClickListener(null);
-		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 	private void requestRoomList() {
@@ -581,12 +554,6 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		//_rooms.setVisibility(View.VISIBLE);
 		_root.invalidate();
 		_rooms.setOnItemClickListener(this);
-	}
-
-	private void startLoginRound() {
-		if (!_facebook.isSessionValid()) {
-			_facebook.authorize(AcroActivity.this, this);
-		}
 	}
 
 	private void startSentenceRound() {
@@ -681,7 +648,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
 		_acros.setOnItemClickListener(this);
 		__state = State.VOTING;
 		_votingProgress.setProgress(0);
@@ -698,8 +665,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		if (State.RESULTS == __state) {
 			return;
 		}
-		__myVoteForAcronymId = acronym.getUserId();
-		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
+		Configuration.me.voteForAcronymId = acronym.getUserId();
+		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 }

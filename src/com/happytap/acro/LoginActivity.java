@@ -1,20 +1,27 @@
 package com.happytap.acro;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.happytap.acro.models.User;
 
 public class LoginActivity extends Activity {
 
   Facebook facebook;
+  AsyncFacebookRunner mAsyncRunner;
   Configuration configuration;
 
   private SharedPreferences mPrefs;
@@ -26,6 +33,7 @@ public class LoginActivity extends Activity {
     configuration = new Configuration(this);
 
     facebook = new Facebook(configuration.getFacebookAppId());
+    mAsyncRunner = new AsyncFacebookRunner(facebook);
 
     mPrefs = getPreferences(MODE_PRIVATE);
     String access_token = mPrefs.getString("access_token", null);
@@ -38,7 +46,7 @@ public class LoginActivity extends Activity {
     }
 
     if (facebook.isSessionValid()) {
-      startAcroActivity();
+      mAsyncRunner.request("me", meListener);
     }
 
   }
@@ -53,12 +61,8 @@ public class LoginActivity extends Activity {
 
     facebook.authorize(this, new DialogListener() {
       @Override public void onComplete(Bundle values) {
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString("access_token", facebook.getAccessToken());
-        editor.putLong("access_expires", facebook.getAccessExpires());
-        editor.commit();
-        
-        startAcroActivity();
+        configuration.setFacebook(facebook);
+        mAsyncRunner.request("me", meListener);
       }
 
       @Override public void onFacebookError(FacebookError error) {
@@ -74,8 +78,25 @@ public class LoginActivity extends Activity {
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Log.d("XXX", "onActivityResult: " + data.getExtras());
     facebook.authorizeCallback(requestCode, resultCode, data);
   }
+  
+  RequestListener meListener = new RequestListener() {
+    
+    @Override public void onComplete(String response, Object state) {
+      Configuration.me = User.parseJson(response);
+      
+      startAcroActivity();
+    }
+    
+    @Override public void onMalformedURLException(MalformedURLException e, Object state) {}
+    
+    @Override public void onIOException(IOException e, Object state) {}
+    
+    @Override public void onFileNotFoundException(FileNotFoundException e, Object state) {}
+    
+    @Override public void onFacebookError(FacebookError e, Object state) {}
+    
+  };
 
 }
