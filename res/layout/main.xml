@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="#000" >
 
     <RelativeLayout
         android:id="@+id/join_room"
-        android:visibility="gone"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/auto_join"
@@ -28,21 +30,21 @@
 
     <RelativeLayout
         android:id="@+id/chat_round"
-        android:visibility="gone"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:visibility="gone" >
 
         <EditText
             android:id="@+id/chat_text"
             android:layout_width="fill_parent"
-            android:layout_height="80dp" 
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true" />
 
         <ListView
             android:id="@+id/chat_view"
-            android:layout_above="@id/chat_text"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:layout_above="@id/chat_text" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -223,7 +225,6 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/chat"
-                android:visibility="gone"
                 android:minHeight="150dp" >
             </ListView>
         </RelativeLayout>
@@ -239,7 +240,7 @@
             android:id="@+id/header_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <TextView
                 android:id="@+id/info"
@@ -282,7 +283,66 @@
             android:id="@+id/acros"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/header_container" >
+            android:layout_below="@id/header_container"
+            android:background="#000" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/results_round"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:id="@+id/header_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Voting Round"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/results_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="5"
+                android:text="45"
+                android:textColor="#FF0000"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/results_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/results_timer"
+                android:layout_toRightOf="@id/info"
+                android:indeterminate="false"
+                android:max="45000"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:progress="0" />
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/acros"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/header_container"
+            android:background="#000" >
         </ListView>
     </RelativeLayout>
 

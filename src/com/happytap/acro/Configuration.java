@@ -26,6 +26,10 @@ public class Configuration {
 		return ctx.getResources().getInteger(R.integer.secondsPerVotingRound);
 	}
 	
+	public int getSecondsPerResultsRound() {
+		return ctx.getResources().getInteger(R.integer.secondsPerResultsRound);
+	}
+	
 	public String getServerUrl() {
 		return ctx.getResources().getString(R.string.serverUrl);
 	}
