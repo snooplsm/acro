@@ -5,8 +5,8 @@
 	<item name="secondsPerRound" type="integer">30</item>
 	<item name="secondsPerVotingRound" type="integer">30</item>
 	<string name="serverUrl">ws://10.11.0.118:8080/websocket</string>
-	<string name="facebookAppId">298308096910188</string>
-	<string name="facebookAppSecret">c252b1756cc4306efa879b9551bf8ae</string>
+	<string name="facebookAppId">135742016560988</string>
+	<string name="facebookAppSecret">ee70cce63d156cbf177721b1412e5a31</string>
 	<item name="log" type="bool">false</item>
 	    
 </resources>
