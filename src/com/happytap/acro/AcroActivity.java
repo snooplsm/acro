@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -47,28 +46,30 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	State __state;
 
-	Facebook _facebook;
-
 	List<Acronym> _acronyms = new ArrayList<Acronym>(10);
 
 	ListView _acros,_chatList;
+
+	AcroAdapter _adapter;
 	
 	View _chat;
 
 	ChatAdapter _chatAdapter;
 
-	AcroAdapter _adapter;
-
-	WebSocketClient _client;
+	View _chatRound;
 
 	EditText _chatText;
 
-	View _chatRound;
+	Runnable _clearChatMessage = new Runnable() {
+		public void run() {
+			_chatText.setText("");
+		};
+	};
+
+	WebSocketClient _client;
 
 	Configuration _config;
 	
-	View _joinRoomRound;
-
 	Runnable _connectionRunnable = new Runnable() {
 		public void run() {
 			try {
@@ -85,44 +86,19 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				_client.connect();
 			} catch (Exception e) {
 				if (e instanceof SocketException) {
-					runOnUiThread(_socketDroppedRunnable);
+					//runOnUiThread(_socketDroppedRunnable);
 				}
-			}
-		};
-	};
-
-	Runnable _sendChatMessage = new Runnable() {
-		public void run() {
-			try {
-				_client.chat("ryan", __myUserId, __room, _chatText.getText().toString());
-				runOnUiThread(_clearChatMessage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		};
-	};
-	
-	Runnable _clearChatMessage = new Runnable() {
-		public void run() {
-			_chatText.setText("");
-		};
-	};
-	
-	
-
-	Runnable _requestRoomList = new Runnable() {
-		public void run() {
-			try {
-				_client.requestRoomsList();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		};
 	};
 
 	Future<?> _connectionRunnableFuture, _requestRoomListFuture;
 
+	Facebook _facebook;
+	
 	TextView _ipAddress;
+	
+	
 
 	Runnable _joinRoomRequest = new Runnable() {
 		public void run() {
@@ -136,12 +112,33 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	Future<?> _joinRoomRequestFuture;
 
-	EditText _one, two, three, four, five, six, seven;
+	View _joinRoomRound;
 
-	TextView _logText;
-	View _logView;
+	private Runnable _onChatRoundRunnable = new Runnable() {
+		public void run() {
+			startChatRound();
+		};
+	};
+
+	EditText _one, two, three, four, five, six, seven;
+	private Runnable _onUiJoinRoomRunnable = new Runnable() {
+		public void run() {
+			startJoinRoomRound();
+			requestRoomList();
+		};
+	};
 
 	ProgressBar _progress;
+
+	Runnable _requestRoomList = new Runnable() {
+		public void run() {
+			try {
+				_client.requestRoomsList();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+	};
 
 	RoomAdapter _roomAdapter;
 
@@ -154,6 +151,17 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			_timer.setText(String.valueOf(k));
 			if (k == 0) {
 				onSentenceRoundOver();
+			}
+		};
+	};
+
+	Runnable _sendChatMessage = new Runnable() {
+		public void run() {
+			try {
+				_client.chat("ryan", __myUserId, __room, _chatText.getText().toString());
+				runOnUiThread(_clearChatMessage);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		};
 	};
@@ -236,6 +244,14 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		return (T) super.findViewById(id);
 	}
 
+	private void hideAllViews() {
+		_joinRoomRound.setVisibility(View.GONE);
+		_chatRound.setVisibility(View.GONE);
+		_votingRound.setVisibility(View.VISIBLE);
+		_joinRoomRound.setVisibility(View.GONE);
+		_socketDroppedRound.setVisibility(View.GONE);
+	}
+
 	private void joinRoom(Room room) {
 		// TODO Auto-generated method stub
 		__room = room;
@@ -244,6 +260,29 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		_joinRoomRequestFuture = ThreadHelper.getScheduler().submit(
 				_joinRoomRequest);
+	}
+
+	@Override
+	public void onCancel() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		startConnectionToServer();
+	}
+
+	@Override
+	public void onComplete(Bundle values) {
+		System.out.println(values);
+	}
+
+	@Override
+	public void onConnected() {
+		//startSentenceRound();
+		//runOnUiThread(_roundUiRunnable);
 	}
 
 	@Override
@@ -265,11 +304,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_acros.setOnItemClickListener(this);
 		_votingRound = findView(R.id.voting_round);
 		_ipAddress = findView(R.id.ip_address);
-		_sentanceRound = findView(R.id.round);
+		_sentanceRound = findView(R.id.sentance_round);
 		_socketDroppedRound = findView(R.id.socket_dropped_round);
 		_socketDroppedRound.setOnClickListener(this);
-		_logText = findView(R.id.log_text);
-		_logView = findView(R.id.log);
 		_chatRound = findView(R.id.chat_round);
 		_chatText = findView(R.id.chat_text);
 		_chatText.setOnKeyListener(this);
@@ -277,12 +314,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chatList = findView(R.id.chat_view);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_joinRoomRound = findView(R.id.join_room);
-		if (_config.isLoggingEnbled()) {
 
-			_logView.setVisibility(View.VISIBLE);
-		} else {
-			_logView.setVisibility(View.GONE);
-		}
 		// two = findView(R.id.two);
 
 		// three = findView(R.id.three);
@@ -295,18 +327,29 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// imm.showSoftInputFromInputMethod(one.getApplicationWindowToken(), 0);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 		_facebook = new Facebook(_config.getFacebookAppId());
-		startConnectionToServer();
-		startJoinRoomRound();
-		// startSentenceRound();
+		//startConnectionToServer();
+		//startJoinRoomRound();
+		 startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
 
 	}
 
-	private void startLoginRound() {
-		if (!_facebook.isSessionValid()) {
-			_facebook.authorize(AcroActivity.this, this);
-		}
+	@Override
+	public void onDisconnected() {
+		//runOnUiThread(_socketDroppedRunnable);
+	}
+
+	@Override
+	public void onError(DialogError e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onFacebookError(FacebookError e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -324,12 +367,6 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 	}
 
-	private Runnable _onChatRoundRunnable = new Runnable() {
-		public void run() {
-			startChatRound();
-		};
-	};
-
 	@Override
 	public void onJoinRoom(Room room) {
 		__room = room;
@@ -337,10 +374,28 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_ENTER) {
+			if(event.getAction()==KeyEvent.ACTION_UP) {
+				ThreadHelper.getScheduler().submit(_sendChatMessage);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		return super.onKeyUp(keyCode, event);
 	}
+
+	@Override
+	public void onMessage(ChatMessage message) {
+		_chatAdapter.setData(__room, Collections.singletonList(message));
+	}
+	
+	
 
 	@Override
 	protected void onResume() {
@@ -354,10 +409,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	public void onSentenceRoundOver() {
-		_sentanceRound.setVisibility(View.GONE);
-		_chatRound.setVisibility(View.GONE);
+		hideAllViews();
 		_votingRound.setVisibility(View.VISIBLE);
-		_joinRoomRound.setVisibility(View.GONE);
 		startVotingRound();
 	}
 
@@ -411,20 +464,29 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
 	}
 
-	private void startConnectionToServer() {
-		if (_connectionRunnableFuture != null) {
-			_connectionRunnableFuture.cancel(true);
-		}
-		_connectionRunnableFuture = ThreadHelper.getScheduler().submit(
-				_connectionRunnable);
-	}
-
 	private void requestRoomList() {
 		if (_requestRoomListFuture != null) {
 			_requestRoomListFuture.cancel(true);
 		}
 		_requestRoomListFuture = ThreadHelper.getScheduler().submit(
 				_requestRoomList);
+	}
+
+	private void startChatRound() {
+		_chatRound.setVisibility(View.VISIBLE);
+		_joinRoomRound.setVisibility(View.GONE);
+		_rooms.setVisibility(View.GONE);
+		_votingRound.setVisibility(View.GONE);
+		_socketDroppedRound.setVisibility(View.GONE);
+		_sentanceRound.setVisibility(View.GONE);
+	}
+
+	private void startConnectionToServer() {
+		if (_connectionRunnableFuture != null) {
+			_connectionRunnableFuture.cancel(true);
+		}
+		_connectionRunnableFuture = ThreadHelper.getScheduler().submit(
+				_connectionRunnable);
 	}
 
 	private void startJoinRoomRound() {
@@ -436,25 +498,22 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_sentanceRound.setVisibility(View.GONE);
 		_rooms.setOnItemClickListener(this);
 	}
-	
-	private void startChatRound() {
-		_chatRound.setVisibility(View.VISIBLE);
-		_joinRoomRound.setVisibility(View.GONE);
-		_rooms.setVisibility(View.GONE);
-		_votingRound.setVisibility(View.GONE);
-		_socketDroppedRound.setVisibility(View.GONE);
-		_sentanceRound.setVisibility(View.GONE);
+
+	private void startLoginRound() {
+		if (!_facebook.isSessionValid()) {
+			_facebook.authorize(AcroActivity.this, this);
+		}
 	}
 
 	private void startSentenceRound() {
+		hideAllViews();
+		_sentanceRound.setVisibility(View.VISIBLE);		
 		_progress.setProgress(0);
 		_timer.setText(String.valueOf(_config.getSecondsPerRound()));
 		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
 				.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
 						TimeUnit.MILLISECONDS);
 	}
-	
-	
 
 	private void startVotingRound() {
 		__state = State.VOTING;
@@ -508,14 +567,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				.scheduleAtFixedRate(_votingRoundRunnable, 0, 100,
 						TimeUnit.MILLISECONDS);
 	}
-
-	private Runnable _onUiJoinRoomRunnable = new Runnable() {
-		public void run() {
-			startJoinRoomRound();
-			requestRoomList();
-		};
-	};
-
+	
 	// TODO
 	public void voteForAcronym(Acronym acronym) {
 		if (State.RESULTS == __state) {
@@ -524,62 +576,5 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		__myVoteForAcronymId = acronym.getUserId();
 		_adapter.setData(__myUserId, __myVoteForAcronymId, _acronyms, __state);
 	}
-
-	@Override
-	public void onComplete(Bundle values) {
-		System.out.println(values);
-	}
-
-	@Override
-	public void onFacebookError(FacebookError e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onError(DialogError e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onCancel() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onClick(View v) {
-
-		startConnectionToServer();
-	}
-
-	@Override
-	public void onConnected() {
-		runOnUiThread(_onUiJoinRoomRunnable);
-	}
-
-	@Override
-	public void onDisconnected() {
-		runOnUiThread(_socketDroppedRunnable);
-	}
-
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_ENTER) {
-			if(event.getAction()==KeyEvent.ACTION_UP) {
-				ThreadHelper.getScheduler().submit(_sendChatMessage);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void onMessage(ChatMessage message) {
-		_chatAdapter.setData(__room, Collections.singletonList(message));
-	}
-	
-	
 
 }

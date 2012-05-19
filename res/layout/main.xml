@@ -4,22 +4,8 @@
     android:layout_height="fill_parent" >
 
     <RelativeLayout
-        android:id="@+id/log"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:background="#FFF" >
-
-        <TextView
-            android:id="@+id/log_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="fill"
-            android:textColor="#000" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/join_room"
+        android:visibility="gone"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
@@ -60,10 +46,10 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/round"
+        android:id="@+id/sentance_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <RelativeLayout
             android:id="@+id/header_container"
@@ -237,6 +223,7 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/chat"
+                android:visibility="gone"
                 android:minHeight="150dp" >
             </ListView>
         </RelativeLayout>
