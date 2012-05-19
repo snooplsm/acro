@@ -24,6 +24,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -126,7 +127,14 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	ProgressBar _progress;
 	
 	View _chooseCategoryRound;
-
+	
+	ProgressBar _chooseCategoryProgress;
+	
+	Future<?> _chooseCategoryFuture;
+	
+	TextView _chooseCategoryTimer;
+	
+	
 	Runnable _requestRoomList = new Runnable() {
 		public void run() {
 			try {
@@ -141,6 +149,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	ListView _rooms;
 
+	ListView _categories;
+	
+	ArrayAdapter<String> _categoryAdapter;
+	
 	Runnable _roundUiRunnable = new Runnable() {
 		public void run() {
 			int k = (int) Math.ceil(_config.getSecondsPerRound()
@@ -242,6 +254,22 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 
 	};
+	
+	Runnable _chooseCategoryRoundRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			int newProgress = _chooseCategoryProgress.getProgress() + 100;
+			_chooseCategoryProgress.setProgress(newProgress);
+			int k = (int) Math.ceil(_config.getSecondsPerChooseCategory()
+					- newProgress / 1000d);
+			if (k == 0) {
+				_chooseCategoryFuture.cancel(true);
+			}
+			runOnUiThread(_chooseCategoryUiRunnable);
+		}
+
+	};
 
 	Future<?> _resultsRoundRunnableFuture;
 
@@ -277,7 +305,25 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 		};
 	};
+	
+	Runnable _chooseCategoryUiRunnable = new Runnable() {
+		public void run() {
 
+			int k = (int) Math.ceil(_config.getSecondsPerChooseCategory()
+					- _chooseCategoryProgress.getProgress() / 1000d);
+			_chooseCategoryTimer.setText(String.valueOf(k));
+			if (k == 0) {
+				onChooseCategoryRoundOver();
+			}
+		}
+
+
+	};
+
+	private void onChooseCategoryRoundOver() {
+		// TODO Auto-generated method stub
+		
+	}
 	InputMethodManager imm;
 
 	@SuppressWarnings("unchecked")
@@ -328,6 +374,13 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				t.setGravity(Gravity.CENTER);
 				_chat.addView(t, lp);
 			}
+			if(showUsers) {
+				//switch to chat
+				_chatList.setAdapter(null);
+			} else {
+				//switch to users
+				_chatList.setAdapter(null);
+			}
 			_chat.invalidate();
 		} else {
 			startConnectionToServer();
@@ -336,6 +389,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onConnected() {
+		//runOnUiThread(_onChatRoundRunnable);
 		runOnUiThread(_onUiJoinRoomRunnable);
 		//runOnUiThread(_joinRoomRound);
 		//startJoinRoomRound();
@@ -380,7 +434,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_resultsProgress = findView(R.id.results_progress_bar);
 		_resultsText = findView(R.id.results_timer);
 		_chooseCategoryRound = findView(R.id.choose_category_round);
-
+		_chooseCategoryProgress = findView(R.id.category_progress_bar);
+		_chooseCategoryProgress.setMax(_config.getSecondsPerChooseCategory() * 1000);
+		_chooseCategoryTimer = findView(R.id.category_timer);
+		_categories = findView(R.id.categories);
 		// two = findView(R.id.two);
 
 		// three = findView(R.id.three);
@@ -397,9 +454,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		//startSentenceRound();
 		// startConnectionToServer();
 		// startJoinRoomRound();
-		startSentenceRound();
+		//startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
+		//startChooseCategoryRound();
 
 	}
 
@@ -532,12 +590,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void startChatRound() {
+		hideAllViews();
 		_chatRound.setVisibility(View.VISIBLE);
-		_joinRoomRound.setVisibility(View.GONE);
-		_rooms.setVisibility(View.GONE);
-		_votingRound.setVisibility(View.GONE);
-		_socketDroppedRound.setVisibility(View.GONE);
-		_sentenceRound.setVisibility(View.GONE);
+		_root.invalidate();
 	}
 
 	private void startConnectionToServer() {
@@ -556,6 +611,19 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_rooms.setOnItemClickListener(this);
 	}
 
+	private void startChooseCategoryRound() {
+		hideAllViews();
+		String[] cats = getResources().getStringArray(R.array.rounds);
+		
+		_chooseCategoryRound.setVisibility(View.VISIBLE);
+		_root.invalidate();
+		_chooseCategoryProgress.setProgress(0);
+		_chooseCategoryTimer.setText(String.valueOf(_config.getSecondsPerRound()));
+		_chooseCategoryFuture = ThreadHelper.getScheduler()
+				.scheduleAtFixedRate(_chooseCategoryRoundRunnable, 0, 100,
+						TimeUnit.MILLISECONDS);
+	}
+	
 	private void startSentenceRound() {
 		hideAllViews();
 		_sentenceRound.setVisibility(View.VISIBLE);
@@ -601,6 +669,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		if (_votingRoundRunnableFuture != null) {
 			_votingRoundRunnableFuture.cancel(true);
+		}
+		if(_chooseCategoryFuture!=null) {
+			_chooseCategoryFuture.cancel(true);
 		}
 	}
 

@@ -24,6 +24,10 @@ public class Configuration {
   public int getSecondsPerRound() {
     return ctx.getResources().getInteger(R.integer.secondsPerRound);
   }
+  
+  public int getSecondsPerChooseCategory() {
+	  return ctx.getResources().getInteger(R.integer.secondsPerChooseCategoryRound);
+  }
 
   public int getSecondsPerVotingRound() {
     return ctx.getResources().getInteger(R.integer.secondsPerVotingRound);

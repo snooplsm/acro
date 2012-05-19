@@ -444,7 +444,7 @@
         android:id="@+id/choose_category_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
        <RelativeLayout
             android:id="@+id/header_container"
@@ -480,7 +480,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/timer"
+                android:layout_toLeftOf="@+id/category_timer"
                 android:layout_toRightOf="@id/info"
                 android:indeterminate="false"
                 android:max="60000"
