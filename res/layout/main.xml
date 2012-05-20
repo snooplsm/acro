@@ -11,20 +11,31 @@
         android:layout_height="fill_parent"
         android:visibility="gone" >
 
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="3dp"
+            android:src="@drawable/ic_launcher" />
+
         <TextView
             android:id="@+id/auto_join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="Auto Join Room"
+            android:text="Acro"
             android:textSize="33dp" />
 
         <ListView
             android:id="@+id/rooms"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/auto_join" >
+            android:layout_below="@id/logo"
+            android:background="#000"
+            android:padding="4dp" >
         </ListView>
     </RelativeLayout>
 
@@ -75,74 +86,80 @@
                 android:text="General" />
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/chat_text"
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-
-        <RelativeLayout            
-            android:id="@+id/chaty"
-            android:layout_width="20dp"
-            android:layout_height="fill_parent"
-            android:layout_above="@id/chat_text"
-            android:layout_alignParentRight="true"
+            android:layout_height="fill_parent" 
             android:layout_below="@id/subheader_container"
-            android:layout_centerVertical="true"
-            android:background="#666"
-            android:orientation="vertical" >
-            
-            <LinearLayout
-                android:id="@+id/chat"
-                android:orientation="vertical" 
-                android:layout_centerVertical="true"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content">
+            android:layout_alignParentBottom="true">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/chat_text"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="U" />
+                android:layout_alignParentBottom="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="S" />
+            <RelativeLayout
+                android:id="@+id/chaty"
+                android:layout_width="40dp"
+                android:layout_height="fill_parent"
+                android:layout_above="@id/chat_text"
+                android:layout_alignParentRight="true"
+                
+                android:background="#666"
+                android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="E" />
+                <LinearLayout
+                    android:id="@+id/chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="R" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="U" />
 
-            <TextView
-                android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="S" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="E" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="R" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="S" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/chat_view"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="S" />
-            </LinearLayout>
+                android:layout_above="@id/chat_text"
+                android:layout_below="@id/subheader_container"
+                android:layout_toLeftOf="@id/chaty" />
         </RelativeLayout>
-
-        <ListView
-            android:id="@+id/chat_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/chat_text"
-            android:layout_below="@id/subheader_container"
-            android:layout_toLeftOf="@id/chaty" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -209,8 +226,9 @@
                     android:id="@+id/answers_accepted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="top"
                     android:includeFontPadding="false"
                     android:text="0"
                     android:textSize="80dp" />
@@ -220,7 +238,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:gravity="center"
+                    android:paddingTop="8dp"
                     android:shadowColor="#000000"
                     android:shadowRadius="3"
                     android:text="Answers Accepted"
@@ -330,13 +348,14 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/input" >
 
             <LinearLayout
                 android:id="@+id/chat"
-                android:layout_width="20dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:background="#666"
                 android:orientation="vertical" >
@@ -352,6 +371,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="#FFF"
                     android:gravity="center"
                     android:text="S" />
 

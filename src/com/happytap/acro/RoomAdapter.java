@@ -67,7 +67,14 @@ public class RoomAdapter extends BaseAdapter {
 		Room room = getItem(position);
 		text.setText(room.getName());
 		TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
-		text2.setText(String.valueOf(room.getSize()));
+		if(room.getSize()==0) {
+			text2.setText("empty");
+		}else
+		if(room.getSize()==13) {
+			text2.setText("full");
+		}else{
+			text2.setText(String.valueOf(room.getSize())+ " players");
+		}
 		return convertView;
 	}
 

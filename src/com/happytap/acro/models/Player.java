@@ -43,6 +43,10 @@ public class Player {
 			JSONObject json = new JSONObject(response);
 			ret.name = json.getString("name");
 			ret.firstName = json.getString("first_name");
+			String last = json.optString("last_name");
+			if(last!=null && last.length()>0) {
+				ret.firstName = ret.firstName + " " + last.charAt(0) + ".";
+			}
 			ret.id = json.getString("id");
 		} catch (JSONException e) {
 			e.printStackTrace();

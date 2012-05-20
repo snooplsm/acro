@@ -31,9 +31,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -492,9 +494,11 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	}
 
+	private View _chaty;
+	
 	@Override
 	public void onClick(View v) {
-		if (v == _chat) {
+		if (v == _chaty) {
 			showUsers = !showUsers;
 			_chat.removeAllViews();
 			final String text;
@@ -551,12 +555,14 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_acroInput.setOnKeyListener(this);
 		_answerCountText = findView(R.id.answers_accepted);
 		_answersContainer = findView(R.id.answers);
+		_autoJoin = findView(R.id.auto_join);
 		_roundInfo = findView(R.id.info);
 		_answersAcceptedTitle = findView(R.id.answers_accepted_title);
 		_progress = findView(R.id.progress_bar);
 		_votingProgress = findView(R.id.voting_progress_bar);
 		_progress.setMax(1000 * _config.getSecondsPerRound());
 		_votingProgress.setMax(1000 * _config.getSecondsPerVotingRound());
+		_logo = findView(R.id.logo);
 		_timer = findView(R.id.timer);
 		_votingTimer = findView(R.id.voting_timer);
 		_acros = findView(R.id.acros);
@@ -575,7 +581,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chatText = findView(R.id.chat_text);
 		_chatText.setOnKeyListener(this);
 		_chat = findView(R.id.chat);
-		_chat.setOnClickListener(this);
+		//_chat.setOnClickListener(this);
+		_chaty = findViewById(R.id.chaty);
+		_chaty.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
 		_otherChat = findView(R.id.chat_list);
 		// _chatUsersAdapter = new ChatUsersAdapter(this);
@@ -904,10 +912,64 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				_connectionRunnable);
 	}
 
+	Future<?> joinRoomAnimatorFuture;
+	
+	private ImageView _logo;
+	
+	private TextView _autoJoin;
+	
+	int pushRight = 0;
+	
+	Runnable joinRoomAnimatorRunnable = new Runnable() {
+		public void run() {
+			while(!cancelAnimation) {
+				runOnUiThread(pushRightRunnable);
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+	};
+	
+	Runnable pushRightRunnable = new Runnable() {
+		public void run() {
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) _logo.getLayoutParams();
+			lp.leftMargin=lp.leftMargin+1;
+			_logo.setLayoutParams(lp);
+			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) _autoJoin.getLayoutParams();
+			if(!goBack) {
+				if(_logo.getRight()>=_autoJoin.getLeft()) {
+					lp2.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
+					lp2.leftMargin=_logo.getRight();
+					_autoJoin.setLayoutParams(lp2);
+				}
+			} else {
+				if(_logo.getLeft()>1) {
+					lp.leftMargin = lp.leftMargin-2;
+					_logo.setLayoutParams(lp);
+				} else {
+					cancelAnimation = true;
+				}
+			}
+			
+			if(_autoJoin.getRight()>_root.getWidth()-5) {
+				goBack = true;
+				//cancelAnimation = true;
+			}
+		};
+	};
+	
+	private boolean goBack = false;
+	private boolean cancelAnimation =false;
+	
 	private void startJoinRoomRound() {
 		hideAllViews();
 		_joinRoomRound.setVisibility(View.VISIBLE);
 		// _rooms.setVisibility(View.VISIBLE);
+		joinRoomAnimatorFuture = ThreadHelper.getScheduler().schedule(joinRoomAnimatorRunnable, 1, TimeUnit.SECONDS);
 		_root.invalidate();
 		_rooms.setOnItemClickListener(this);
 	}

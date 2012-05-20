@@ -111,6 +111,7 @@ public class AcroAdapter extends BaseAdapter {
 			username.setVisibility(View.GONE);
 		}
 		if(State.RESULTS==state) {
+			index.setVisibility(View.INVISIBLE);
 			index.setText(String.valueOf(acro.getVoteCount()));
 			username.setText(acro.getPlayer().getName());
 			username.setVisibility(View.VISIBLE);
