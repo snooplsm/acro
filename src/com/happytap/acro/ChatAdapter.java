@@ -72,7 +72,7 @@ public class ChatAdapter extends BaseAdapter {
 		final String username;
 		Player player = room.getPlayer(message.getFromId());
 		if(player==null) {
-			username = "unknown";
+			username = message.getUsername();
 		} else {
 			username = player.getName();
 		}

@@ -6,17 +6,23 @@ public class ChatMessage {
 
 	private String msg;
 	private String fromId;
+	private String username;
 	private long timeStamp;
 	
 	public ChatMessage(JSONObject obj) {
 		msg = obj.optString("message");
-		fromId = obj.optString("user_id");		
+		fromId = obj.optString("user_id");
+		username = obj.optString("username");
 	}
 
 	public String getMsg() {
 		return msg;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+	
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
