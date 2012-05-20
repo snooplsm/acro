@@ -48,7 +48,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Room __room;
 
 	State __state;
-	
+
 	String __category;
 
 	List<Acronym> _acronyms = new ArrayList<Acronym>(10);
@@ -58,13 +58,13 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	AcroAdapter _adapter;
 
 	LinearLayout _chat;
-	
+
 	Round __round;
-	
+
 	VotingRound __votingRound;
 
 	ChatAdapter _chatAdapter;
-	
+
 	ChatPlayersAdapter _chatPlayersAdapter;
 
 	View _chatRound;
@@ -95,8 +95,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 			runOnUiThread(_setIpAddressRunnable);
 			String url = _config.getServerUrl().trim();
-			_client = new WebSocketClient(URI.create(url),
-					AcroActivity.this);
+			_client = new WebSocketClient(URI.create(url), AcroActivity.this);
 			try {
 				_client.connect();
 			} catch (Exception e) {
@@ -127,7 +126,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	private Runnable _onChatRoundRunnable = new Runnable() {
 		public void run() {
-	        _playersCount.setText(__room.getHumanizedPlayersCount());
+			_playersCount.setText(__room.getHumanizedPlayersCount());
 			startChatRound();
 		};
 	};
@@ -141,16 +140,15 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	};
 
 	ProgressBar _progress;
-	
+
 	View _chooseCategoryRound;
-	
+
 	ProgressBar _chooseCategoryProgress;
-	
+
 	Future<?> _chooseCategoryFuture;
-	
+
 	TextView _chooseCategoryTimer;
-	
-	
+
 	Runnable _requestRoomList = new Runnable() {
 		public void run() {
 			try {
@@ -166,9 +164,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	ListView _rooms;
 
 	ListView _categories;
-	
+
 	ArrayAdapter<String> _categoryAdapter;
-	
+
 	Runnable _roundUiRunnable = new Runnable() {
 		public void run() {
 			int k = (int) Math.ceil(_config.getSecondsPerRound()
@@ -185,20 +183,21 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _sendChatMessage = new Runnable() {
 		public void run() {
 			try {
-				_client.chat(Configuration.me.firstName, Configuration.me.id, __room, _chatText.getText()
-						.toString());
+				_client.chat(Configuration.me.firstName, Configuration.me.id,
+						__room, _chatText.getText().toString());
 				runOnUiThread(_clearChatMessage);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		};
 	};
-	
+
 	Runnable _sendCategory = new Runnable() {
 		public void run() {
 			try {
-				
-				_client.setCategory(Configuration.me.firstName, Configuration.me.id, __room, __category);
+
+				_client.setCategory(Configuration.me.firstName,
+						Configuration.me.id, __room, __category);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -227,7 +226,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	private Runnable _setIpAddressRunnable = new Runnable() {
 		public void run() {
-			_ipAddress.setText(__ipAddress + "\n" + _config.getServerUrl().trim());
+			_ipAddress.setText(__ipAddress + "\n"
+					+ _config.getServerUrl().trim());
 		}
 	};
 
@@ -235,8 +235,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	Runnable _socketDroppedRunnable = new Runnable() {
 		public void run() {
-			
-			//_socketDroppedRound.setVisibility(View.VISIBLE);
+
+			// _socketDroppedRound.setVisibility(View.VISIBLE);
 		};
 	};
 
@@ -274,7 +274,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		public void run() {
 			int newProgress = _resultsProgress.getProgress() + 100;
 			_resultsProgress.setProgress(newProgress);
-			int k = (int) Math.ceil(_config.getSecondsPerVotingRound()
+			int k = (int) Math.ceil(_config.getSecondsPerResultsRound()
 					- newProgress / 1000d);
 			if (k == 0) {
 				_resultsRoundRunnableFuture.cancel(true);
@@ -284,6 +284,26 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	};
 	
+	public void startResultsRound() {
+		hideAllViews();
+		_votingRound.setVisibility(View.VISIBLE);
+		__state = State.RESULTS;
+		_votingProgress.setProgress(0);
+		_votingTimer
+				.setText(String.valueOf(_config.getSecondsPerResultsRound()));
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId,
+				__votingRound.getAcronyms(), __state);
+		_acros.setOnItemClickListener(this);
+
+		_votingProgress.setProgress(0);
+		_votingProgress.setMax(_config.getSecondsPerResultsRound() * 1000);
+		_votingTimer
+				.setText(String.valueOf(_config.getSecondsPerVotingRound()));
+		_resultsRoundRunnableFuture = ThreadHelper.getScheduler()
+				.scheduleAtFixedRate(_resultsRoundRunnable, 0, 100,
+						TimeUnit.MILLISECONDS);
+	}
+
 	Runnable _chooseCategoryRoundRunnable = new Runnable() {
 
 		@Override
@@ -334,7 +354,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 		};
 	};
-	
+
 	Runnable _chooseCategoryUiRunnable = new Runnable() {
 		public void run() {
 
@@ -346,13 +366,13 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			}
 		}
 
-
 	};
 
 	private void onChooseCategoryRoundOver() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	InputMethodManager imm;
 
 	@SuppressWarnings("unchecked")
@@ -403,11 +423,11 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				t.setGravity(Gravity.CENTER);
 				_chat.addView(t, lp);
 			}
-			if(showUsers) {
-				//switch to chat
+			if (showUsers) {
+				// switch to chat
 				_chatList.setAdapter(_chatPlayersAdapter);
 			} else {
-				//switch to users
+				// switch to users
 				_chatList.setAdapter(_chatAdapter);
 			}
 			_chat.invalidate();
@@ -418,23 +438,24 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onConnected() {
-		//runOnUiThread(_onChatRoundRunnable);
+		// runOnUiThread(_onChatRoundRunnable);
 		runOnUiThread(_onUiJoinRoomRunnable);
-		//runOnUiThread(_joinRoomRound);
-		//startJoinRoomRound();
-		//startChatRound();
+		// runOnUiThread(_joinRoomRound);
+		// startJoinRoomRound();
+		// startChatRound();
 		// startSentenceRound();
 		// runOnUiThread(_roundUiRunnable);
 	}
 
-	private TextView _category,_acro1,_acro2,_acro3,_acro4,_acro5;
+	private TextView _category, _acro1, _acro2, _acro3, _acro4, _acro5;
 	private TextView[] _allAcros;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		_config = new Configuration(this);
 		super.onCreate(savedInstanceState);
-		__round = new Round("ABC","FOO");
+		__round = new Round("ABC", "FOO");
+		__votingRound = new VotingRound();
 		setContentView(R.layout.main);
 		_root = findViewById(R.id.root);
 		_acroInput = findView(R.id.one);
@@ -465,7 +486,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
 		_otherChat = findView(R.id.chat_list);
-		//_chatUsersAdapter = new ChatUsersAdapter(this);
+		// _chatUsersAdapter = new ChatUsersAdapter(this);
 		_chatPlayersAdapter = new ChatPlayersAdapter(this);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_otherChat.setAdapter(_chatAdapter);
@@ -475,7 +496,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_resultsText = findView(R.id.results_timer);
 		_chooseCategoryRound = findView(R.id.choose_category_round);
 		_chooseCategoryProgress = findView(R.id.category_progress_bar);
-		_chooseCategoryProgress.setMax(_config.getSecondsPerChooseCategory() * 1000);
+		_chooseCategoryProgress
+				.setMax(_config.getSecondsPerChooseCategory() * 1000);
 		_chooseCategoryTimer = findView(R.id.category_timer);
 		_categories = findView(R.id.categories);
 		_categories.setOnItemClickListener(this);
@@ -484,7 +506,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_acro3 = findView(R.id.acrothree);
 		_acro4 = findView(R.id.acrofour);
 		_acro5 = findView(R.id.acrofive);
-		_allAcros = new TextView[]{_acro1,_acro2,_acro3,_acro4,_acro5};
+		_allAcros = new TextView[] { _acro1, _acro2, _acro3, _acro4, _acro5 };
 		// two = findView(R.id.two);
 
 		// three = findView(R.id.three);
@@ -496,15 +518,16 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// getSystemService(Context.INPUT_METHOD_SERVICE);
 		// imm.showSoftInputFromInputMethod(one.getApplicationWindowToken(), 0);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-		//startConnectionToServer();
-		//startJoinRoomRound();
-		//startSentenceRound();
-		startConnectionToServer();
+		// startConnectionToServer();
 		// startJoinRoomRound();
-		//startSentenceRound();
+		// startSentenceRound();
+		startConnectionToServer();
+		//startVotingRound();
+		// startJoinRoomRound();
+		// startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
-		//startChooseCategoryRound();
+		// startChooseCategoryRound();
 
 	}
 
@@ -520,23 +543,23 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			joinRoom(_roomAdapter.getItem(position));
 			return;
 		}
-		if (adapter == _acronyms) {
+		if (adapter == _acros) {
 			Acronym acronym = (Acronym) adapter.getItemAtPosition(position);
-			if (!acronym.getUserId().equals(Configuration.me.id)) {
+			if (!acronym.getPlayer().getId().equals(Configuration.me.id)) {
 				voteForAcronym(acronym);
 			}
 		}
-		if(adapter==_categories) {
+		if (adapter == _categories) {
 			String category = _categoryAdapter.getItem(position);
 			chooseCategory(category);
 		}
 	}
-	
+
 	private Future<?> sendCategoryFuture;
 
 	private void chooseCategory(String category) {
 		__category = category;
-		sendCategoryFuture = ThreadHelper.getScheduler().submit(_sendCategory);		
+		sendCategoryFuture = ThreadHelper.getScheduler().submit(_sendCategory);
 	}
 
 	@Override
@@ -548,9 +571,11 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if(v==_acroInput) {
-			if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_UP) {
-				submitAcronymFuture = ThreadHelper.getScheduler().submit(submitAcronymRunnable);
+		if (v == _acroInput) {
+			if (keyCode == KeyEvent.KEYCODE_ENTER
+					&& event.getAction() == KeyEvent.ACTION_UP) {
+				submitAcronymFuture = ThreadHelper.getScheduler().submit(
+						submitAcronymRunnable);
 				return false;
 			}
 		}
@@ -581,7 +606,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onRoomList(List<Room> rooms) {
-		for(Room r : rooms) {
+		for (Room r : rooms) {
 			System.out.println(r);
 		}
 		_roomAdapter.setData(rooms);
@@ -591,12 +616,13 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		hideAllViews();
 		_votingRound.setVisibility(View.VISIBLE);
 		_root.invalidate();
-		//startVotingRound();
+		// startVotingRound();
 	}
 
 	public void onVotesIn(List<Acronym> acronyms) {
 		_acronyms = acronyms;
-		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId,
+				__votingRound.getAcronyms(), __state);
 	}
 
 	public void onVotingRoundOver() {
@@ -645,15 +671,17 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		__state = State.RESULTS;
 		_acros.setOnItemClickListener(null);
-		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId,
+				_acronyms, __state);
 	}
-	
+
 	Future<?> submitAcronymFuture;
-	
+
 	Runnable submitAcronymRunnable = new Runnable() {
 		public void run() {
 			try {
-				_client.submitAcronym(Configuration.me, __room, _acroInput.getText().toString());
+				_client.submitAcronym(Configuration.me, __room, _acroInput
+						.getText().toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -685,127 +713,131 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	private void startJoinRoomRound() {
 		hideAllViews();
 		_joinRoomRound.setVisibility(View.VISIBLE);
-		//_rooms.setVisibility(View.VISIBLE);
+		// _rooms.setVisibility(View.VISIBLE);
 		_root.invalidate();
 		_rooms.setOnItemClickListener(this);
 	}
 
 	private Random random = new Random();
-	
+
 	private void startChooseCategoryRound() {
 		hideAllViews();
 		String[] cats = getResources().getStringArray(R.array.rounds);
-		int a=-1,b=-1,c=-1,d=-1;		
-		while(true) {
-			if(a==-1) {
+		int a = -1, b = -1, c = -1, d = -1;
+		while (true) {
+			if (a == -1) {
 				a = random.nextInt(cats.length);
 				continue;
 			}
-			if(b==-1) {
+			if (b == -1) {
 				int temp = random.nextInt(cats.length);
-				if(temp!=a) {
+				if (temp != a) {
 					b = temp;
 				}
 				continue;
 			}
-			if(c==-1) {
+			if (c == -1) {
 				int temp = random.nextInt(cats.length);
-				if(temp!=a && temp!=b) {
+				if (temp != a && temp != b) {
 					c = temp;
 				}
 				continue;
 			}
-			if(d==-1) {
+			if (d == -1) {
 				int temp = random.nextInt(cats.length);
-				if(temp!=a && temp!=c && temp!=b) {
+				if (temp != a && temp != c && temp != b) {
 					d = temp;
 					break;
 				}
 				continue;
 			}
-			
+
 		}
 		ArrayList<String> catsl = new ArrayList<String>(4);
 		catsl.add(cats[a]);
 		catsl.add(cats[b]);
 		catsl.add(cats[c]);
 		catsl.add(cats[d]);
-		_categoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,catsl);
+		_categoryAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, catsl);
 		_categories.setAdapter(_categoryAdapter);
 		_chooseCategoryRound.setVisibility(View.VISIBLE);
 		_root.invalidate();
 		_chooseCategoryProgress.setProgress(0);
-		_chooseCategoryTimer.setText(String.valueOf(_config.getSecondsPerRound()));
+		_chooseCategoryTimer.setText(String.valueOf(_config
+				.getSecondsPerRound()));
 		_chooseCategoryFuture = ThreadHelper.getScheduler()
 				.scheduleAtFixedRate(_chooseCategoryRoundRunnable, 0, 100,
 						TimeUnit.MILLISECONDS);
 	}
-	
+
 	private void startSentenceRound() {
 		hideAllViews();
 		_sentenceRound.setVisibility(View.VISIBLE);
-		if(__round!=null) {
+		if (__round != null) {
 			_category.setText(__round.getCategory());
-			for(int i = 0; i < _allAcros.length; i++) {
-				
-				if(i<__round.getAcronym().length()) {
+			for (int i = 0; i < _allAcros.length; i++) {
+
+				if (i < __round.getAcronym().length()) {
 					_allAcros[i].setVisibility(View.INVISIBLE);
-					_allAcros[i].setText(String.valueOf(__round.getAcronym().charAt(i)));
+					_allAcros[i].setText(String.valueOf(__round.getAcronym()
+							.charAt(i)));
 				} else {
 					_allAcros[i].setVisibility(View.GONE);
 				}
 			}
 			List<View> views = new ArrayList<View>();
 			int offset = 0;
-			for(int i = 0; i <__round.getAcronym().length(); i++) {
+			for (int i = 0; i < __round.getAcronym().length(); i++) {
 				views.add(_allAcros[i]);
 				final int j = i;
-				AlphaAnimation a = new AlphaAnimation(0,1);
+				AlphaAnimation a = new AlphaAnimation(0, 1);
 				a.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						_allAcros[j].setVisibility(View.VISIBLE);
 					}
-					
+
 					@Override
 					public void onAnimationStart(Animation animation) {
 						// TODO Auto-generated method stub
-						
+
 					}
-					
+
 					@Override
 					public void onAnimationRepeat(Animation animation) {
 						// TODO Auto-generated method stub
-						
+
 					}
 				});
-				a.setStartOffset(offset+1000);
+				a.setStartOffset(offset + 1000);
 				a.setDuration(1000);
-				offset+=1000;
+				offset += 1000;
 				_allAcros[i].startAnimation(a);
 			}
-			//AlphaAfterAnimation a = new AlphaAfterAnimation(views);
-			//a.setDuration(1000);
-			//a.startme();
-		} 		
+			// AlphaAfterAnimation a = new AlphaAfterAnimation(views);
+			// a.setDuration(1000);
+			// a.startme();
+		}
 		_root.invalidate();
 		_progress.setProgress(0);
 		_timer.setText(String.valueOf(_config.getSecondsPerRound()));
 
 		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
-				.scheduleAtFixedRate(_sentanceRoundRunnable, (__round.getAcronym().length()+1)*1000, 100,
+				.scheduleAtFixedRate(_sentanceRoundRunnable,
+						(__round.getAcronym().length() + 1) * 1000, 100,
 						TimeUnit.MILLISECONDS);
 	}
-	
+
 	private Runnable _startSentenceRoundRunnable = new Runnable() {
 		public void run() {
-			startSentenceRound();						
+			startSentenceRound();
 		};
 	};
 
 	private MenuItem _restart;
 	private MenuItem _configR;
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (_config.isTest()) {
@@ -821,8 +853,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			killAllTasks();
 			startSentenceRound();
 		}
-		if(_configR.equals(item)) {
-			startActivity(new Intent(this,ConfigActivity.class));
+		if (_configR.equals(item)) {
+			startActivity(new Intent(this, ConfigActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -843,24 +875,30 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		if (_votingRoundRunnableFuture != null) {
 			_votingRoundRunnableFuture.cancel(true);
 		}
-		if(_chooseCategoryFuture!=null) {
+		if (_chooseCategoryFuture != null) {
 			_chooseCategoryFuture.cancel(true);
 		}
-		if(sendCategoryFuture!=null) {
+		if (sendCategoryFuture != null) {
 			sendCategoryFuture.cancel(true);
+		}
+		if (_voteForAcronymFuture!=null) {
+			_voteForAcronymFuture.cancel(true);
 		}
 	}
 
 	private void startVotingRound() {
+		hideAllViews();
+		_votingRound.setVisibility(View.VISIBLE);
 		__state = State.VOTING;
-		//_acronyms.clear();
+		// _acronyms.clear();
 		_votingProgress.setProgress(0);
 		_votingTimer
 				.setText(String.valueOf(_config.getSecondsPerVotingRound()));
-		
-		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, __votingRound.getAcronyms(), __state);
-		_acros.setOnItemClickListener(this);
 		__state = State.VOTING;
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId,
+				__votingRound.getAcronyms(), __state);
+		_acros.setOnItemClickListener(this);
+
 		_votingProgress.setProgress(0);
 		_votingProgress.setMax(_config.getSecondsPerVotingRound() * 1000);
 		_votingTimer
@@ -875,9 +913,24 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		if (State.RESULTS == __state) {
 			return;
 		}
-		Configuration.me.voteForAcronymId = acronym.getUserId();
-		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
+		Configuration.me.voteForAcronymId = acronym.getPlayer().getId();
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId,
+				__votingRound.getAcronyms(), __state);
+		_voteForAcronymFuture = ThreadHelper.getScheduler().submit(_voteForAcronymRunnable);
 	}
+
+	Future<?> _voteForAcronymFuture;
+
+	Runnable _voteForAcronymRunnable = new Runnable() {
+		public void run() {
+			try {
+				_client.voteForAcronym(Configuration.me,
+						Configuration.me.voteForAcronymId, __room);
+			} catch (Exception e) {
+
+			}
+		};
+	};
 
 	@Override
 	public void onStartRound(Round round) {
@@ -891,10 +944,23 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		};
 	};
 	
+	private Runnable _startResultsRoundRunnable = new Runnable() {
+		public void run() {
+			startResultsRound();
+		};
+	};
+
 	@Override
 	public void onStartVotingRound(VotingRound round) {
 		__votingRound = round;
 		runOnUiThread(_startVotingRoundRunnable);
+	}
+
+	@Override
+	public void onStartVotingResultsRound(VotingRound voteCounts) {
+		__votingRound = voteCounts;
+		runOnUiThread(_startResultsRoundRunnable);
+		
 	}
 
 }

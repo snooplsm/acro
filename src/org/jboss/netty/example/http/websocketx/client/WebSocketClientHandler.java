@@ -119,6 +119,8 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 			listener.onStartRound(response.getRound());
 		} else if (response.isVotingRound()) {
 			listener.onStartVotingRound(response.getVotingRound());
+		} else if (response.isVoteCounts()) {
+			listener.onStartVotingResultsRound(response.getVoteCounts());
 		}
 
 	}

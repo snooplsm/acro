@@ -24,6 +24,7 @@ public class Response extends JSONObject {
 		return new Room(optJSONObject("data"));
 	}
 
+	
 	public boolean isRoomListResponse() {
 		return "rl".equals(optString("type"));
 	}
@@ -37,10 +38,18 @@ public class Response extends JSONObject {
 	}
 	
 	public boolean isVotingRound() {
-		return "aa".equals(optString("type"));
+		return "as".equals(optString("type"));
 	}
 	
 	public VotingRound getVotingRound() {
+		return new VotingRound(optJSONArray("data"));
+	}
+	
+	public boolean isVoteCounts() {
+		return "vc".equals(optString("type"));
+	};
+	
+	public VotingRound getVoteCounts() {
 		return new VotingRound(optJSONArray("data"));
 	}
 	

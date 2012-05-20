@@ -17,6 +17,12 @@ public class VotingRound {
 		}
 	}
 	
+	public VotingRound() {
+		acronyms = new ArrayList<Acronym>();
+		acronyms.add(new Acronym("ACD",""));
+		acronyms.add(new Acronym("DCB","a"));
+	}
+	
 	public List<Acronym> getAcronyms() {
 		return acronyms;
 	}

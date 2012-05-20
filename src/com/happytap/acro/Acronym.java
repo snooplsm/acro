@@ -2,6 +2,8 @@ package com.happytap.acro;
 
 import org.json.JSONObject;
 
+import com.happytap.acro.models.Player;
+
 public class Acronym {
 
 	private JSONObject data;
@@ -10,12 +12,18 @@ public class Acronym {
 		this.data = obj;
 	}
 	
-	public String getUserId() {
-		return data.optString("user_id");
+	public Acronym(String acronym, String userId) {
+		data = new JSONObject();
+		try {
+			data.put("text",acronym);
+			data.put("user_id", userId);
+		} catch (Exception e) {
+			
+		}
 	}
 	
-	public String getUsername() {
-		return data.optString("username");
+	public Player getPlayer() {
+		return Player.parseJson(null, data.optJSONObject("player"));
 	}
 	
 	public String getText() {

@@ -192,5 +192,15 @@ import com.happytap.acro.models.Player;
 		req.put("category", __category);
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
+
+	public void voteForAcronym(Player me, String voteForAcronymId, Room __room) throws Exception {
+		// TODO Auto-generated method stub
+		JSONObject req = new JSONObject();
+		req.put("type","vt");
+		req.put("room", __room.getId());
+		req.put("user_id",me.getId());
+		req.put("acronym", voteForAcronymId);
+		ch.write(new TextWebSocketFrame(req.toString()));
+	}
   
   }

@@ -71,6 +71,7 @@ public class AcroAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		System.out.println(state);
 		final View view;
 		if (convertView == null) {
 			view = LayoutInflater.from(context).inflate(
@@ -85,14 +86,14 @@ public class AcroAdapter extends BaseAdapter {
 		
 		index.setText(String.valueOf(position + 1));
 		Acronym acro = acronyms.get(position);
-		username.setText(acro.getUsername());
+		username.setText(acro.getPlayer().getName());
 		text.setText(acro.getText());
 		fav.setImageResource(android.R.drawable.star_big_on);
-		if (player.getId().equals(acro.getUserId())) {
+		if (player.getId().equals(acro.getPlayer().getId())) {
 			text.setTextColor(Color.RED);
 			fav.setImageDrawable(null);
 		} else {
-			if (acro.getUserId().equals(myVote)) {
+			if (acro.getPlayer().getId().equals(myVote)) {
 				text.setTextColor(Color.GREEN);
 			} else {
 				text.setTextColor(Color.WHITE);
@@ -100,10 +101,12 @@ public class AcroAdapter extends BaseAdapter {
 			}
 		}
 		
-		if(State.VOTING==state) {
+		if(State.VOTING==state) {			
 			username.setVisibility(View.GONE);
 		}
 		if(State.RESULTS==state) {
+			index.setText(String.valueOf(acro.getVoteCount()));
+			username.setText(acro.getPlayer().getName());
 			username.setVisibility(View.VISIBLE);
 		}
 

@@ -3,7 +3,7 @@
 
 	<item name="isTest" type="bool">true</item>
 	<item name="secondsPerRound" type="integer">20</item>
-	<item name="secondsPerVotingRound" type="integer">45</item>
+	<item name="secondsPerVotingRound" type="integer">20</item>
 	<item name="secondsPerResultsRound" type="integer">15</item>
 	<item name="secondsPerChooseCategoryRound" type="integer">10</item>
 	<string name="serverUrl">ws://technically.us:8080/websocket</string>
