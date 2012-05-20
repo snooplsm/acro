@@ -5,11 +5,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.jboss.netty.example.http.websocketx.client.AcroListener;
 import org.jboss.netty.example.http.websocketx.client.WebSocketClient;
-import org.jboss.netty.example.http.websocketx.client.WebSocketClientHandler.AcroListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +33,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.Facebook;
 import com.happytap.acro.AcroAdapter.State;
 
 public class AcroActivity extends Activity implements OnItemClickListener,
@@ -43,14 +43,20 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Room __room;
 
 	State __state;
+	
+	String __category;
 
 	List<Acronym> _acronyms = new ArrayList<Acronym>(10);
 
-	ListView _acros, _chatList;
+	ListView _acros, _chatList, _otherChat;
 
 	AcroAdapter _adapter;
 
 	LinearLayout _chat;
+	
+	Round __round;
+	
+	VotingRound __votingRound;
 
 	ChatAdapter _chatAdapter;
 
@@ -157,7 +163,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		public void run() {
 			int k = (int) Math.ceil(_config.getSecondsPerRound()
 					- _progress.getProgress() / 1000d);
+			System.out.println(k);
 			_timer.setText(String.valueOf(k));
+			_timer.invalidate();
 			if (k == 0) {
 				onSentenceRoundOver();
 			}
@@ -167,13 +175,24 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _sendChatMessage = new Runnable() {
 		public void run() {
 			try {
-				_client.chat("ryan", Configuration.me.id, __room, _chatText.getText()
+				_client.chat(Configuration.me.firstName, Configuration.me.id, __room, _chatText.getText()
 						.toString());
 				runOnUiThread(_clearChatMessage);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		};
+	};
+	
+	Runnable _sendCategory = new Runnable() {
+		public void run() {
+			try {
+				
+				_client.setCategory(Configuration.me.firstName, Configuration.me.id, __room, __category);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	};
 
 	View _sentenceRound;
@@ -398,6 +417,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// runOnUiThread(_roundUiRunnable);
 	}
 
+	private TextView _category;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		_config = new Configuration(this);
@@ -420,6 +441,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_votingRound = findView(R.id.voting_round);
 		_ipAddress = findView(R.id.ip_address);
 		_sentenceRound = findView(R.id.sentance_round);
+		_category = findView(R.id.category);
 		_socketDroppedRound = findView(R.id.socket_dropped_round);
 		_socketDroppedRound.setOnClickListener(this);
 		_chatRound = findView(R.id.chat_round);
@@ -428,7 +450,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chat = findView(R.id.chat);
 		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
+		_otherChat = findView(R.id.chat_list);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
+		_otherChat.setAdapter(_chatAdapter);
 		_joinRoomRound = findView(R.id.join_room);
 		_resultsRound = findView(R.id.results_round);
 		_resultsProgress = findView(R.id.results_progress_bar);
@@ -438,6 +462,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chooseCategoryProgress.setMax(_config.getSecondsPerChooseCategory() * 1000);
 		_chooseCategoryTimer = findView(R.id.category_timer);
 		_categories = findView(R.id.categories);
+		_categories.setOnItemClickListener(this);
 		// two = findView(R.id.two);
 
 		// three = findView(R.id.three);
@@ -449,10 +474,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		// getSystemService(Context.INPUT_METHOD_SERVICE);
 		// imm.showSoftInputFromInputMethod(one.getApplicationWindowToken(), 0);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-		startConnectionToServer();
+		//startConnectionToServer();
 		//startJoinRoomRound();
 		//startSentenceRound();
-		// startConnectionToServer();
+		startConnectionToServer();
 		// startJoinRoomRound();
 		//startSentenceRound();
 		// startJoinRoomRound();
@@ -479,6 +504,17 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 				voteForAcronym(acronym);
 			}
 		}
+		if(adapter==_categories) {
+			String category = _categoryAdapter.getItem(position);
+			chooseCategory(category);
+		}
+	}
+	
+	private Future<?> sendCategoryFuture;
+
+	private void chooseCategory(String category) {
+		__category = category;
+		sendCategoryFuture = ThreadHelper.getScheduler().submit(_sendCategory);		
 	}
 
 	@Override
@@ -611,10 +647,48 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_rooms.setOnItemClickListener(this);
 	}
 
+	private Random random = new Random();
+	
 	private void startChooseCategoryRound() {
 		hideAllViews();
 		String[] cats = getResources().getStringArray(R.array.rounds);
-		
+		int a=-1,b=-1,c=-1,d=-1;		
+		while(true) {
+			if(a==-1) {
+				a = random.nextInt(cats.length);
+				continue;
+			}
+			if(b==-1) {
+				int temp = random.nextInt(cats.length);
+				if(temp!=a) {
+					b = temp;
+				}
+				continue;
+			}
+			if(c==-1) {
+				int temp = random.nextInt(cats.length);
+				if(temp!=a && temp!=b) {
+					c = temp;
+				}
+				continue;
+			}
+			if(d==-1) {
+				int temp = random.nextInt(cats.length);
+				if(temp!=a && temp!=c && temp!=b) {
+					d = temp;
+					break;
+				}
+				continue;
+			}
+			
+		}
+		ArrayList<String> catsl = new ArrayList<String>(4);
+		catsl.add(cats[a]);
+		catsl.add(cats[b]);
+		catsl.add(cats[c]);
+		catsl.add(cats[d]);
+		_categoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,catsl);
+		_categories.setAdapter(_categoryAdapter);
 		_chooseCategoryRound.setVisibility(View.VISIBLE);
 		_root.invalidate();
 		_chooseCategoryProgress.setProgress(0);
@@ -627,13 +701,25 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	private void startSentenceRound() {
 		hideAllViews();
 		_sentenceRound.setVisibility(View.VISIBLE);
+		if(__round!=null) {
+			_category.setText(__round.getCategory());
+		} else {
+			
+			
+			_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
+					.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
+							TimeUnit.MILLISECONDS);
+		}
 		_root.invalidate();
 		_progress.setProgress(0);
 		_timer.setText(String.valueOf(_config.getSecondsPerRound()));
-		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
-				.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
-						TimeUnit.MILLISECONDS);
 	}
+	
+	private Runnable _startSentenceRoundRunnable = new Runnable() {
+		public void run() {
+			startSentenceRound();						
+		};
+	};
 
 	private MenuItem _restart;
 
@@ -672,6 +758,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		if(_chooseCategoryFuture!=null) {
 			_chooseCategoryFuture.cancel(true);
+		}
+		if(sendCategoryFuture!=null) {
+			sendCategoryFuture.cancel(true);
 		}
 	}
 
@@ -738,6 +827,24 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		Configuration.me.voteForAcronymId = acronym.getUserId();
 		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
+	}
+
+	@Override
+	public void onStartRound(Round round) {
+		__round = round;
+		runOnUiThread(_startSentenceRoundRunnable);
+	}
+
+	private Runnable _startVotingRoundRunnable = new Runnable() {
+		public void run() {
+			startVotingRound();
+		};
+	};
+	
+	@Override
+	public void onStartVotingRound(VotingRound round) {
+		__votingRound = round;
+		runOnUiThread(_startVotingRoundRunnable);
 	}
 
 }

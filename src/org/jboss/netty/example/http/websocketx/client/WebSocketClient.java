@@ -48,7 +48,6 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.example.http.websocketx.client.WebSocketClientHandler.AcroListener;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -165,6 +164,18 @@ import com.happytap.acro.Room;
 		req.put("room", _room.getId());
 		req.put("user_id", userId);
 		req.put("message", message);
+		ch.write(new TextWebSocketFrame(req.toString()));
+	}
+
+	public void setCategory(String firstName, String id, Room __room,
+			String __category) throws Exception {
+		System.out.println("set category");
+		JSONObject req = new JSONObject();
+		req.put("type", "c");
+		req.put("username", firstName);
+		req.put("user_id",id);
+		req.put("room", __room.getId());
+		req.put("category", __category);
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
   

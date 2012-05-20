@@ -109,29 +109,21 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 
 	private void handleMessage(String text) throws Exception {
 		Response response = new Response(text);
-		if (response.isJoinRoomResponse()) {
+		if (response.isMessage()) {
+			listener.onMessage(response.getMessage());
+		} else if (response.isJoinRoomResponse()) {
 			listener.onJoinRoom(response.getRoom());
 		} else if (response.isRoomListResponse()) {
 			listener.onRoomList(response.getRooms());
-		} else if (response.isMessage()) {
-			listener.onMessage(response.getMessage());
+		} else if (response.isStartRound()) {
+			listener.onStartRound(response.getRound());
+		} else if (response.isVotingRound()) {
+			listener.onStartVotingRound(response.getVotingRound());
 		}
 
 	}
 
 	private final AcroListener listener;
-
-	public interface AcroListener {
-		void onJoinRoom(Room room);
-
-		void onConnected();
-
-		void onDisconnected();
-
-		void onRoomList(List<Room> rooms);
-		
-		void onMessage(ChatMessage message);
-	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)

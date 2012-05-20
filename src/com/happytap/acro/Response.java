@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Message;
-
 public class Response extends JSONObject {
 
 	public boolean isJoinRoomResponse() {
@@ -32,6 +30,22 @@ public class Response extends JSONObject {
 	
 	public boolean isMessage() {
 		return "m".equals(optString("type"));
+	}
+	
+	public boolean isStartRound() {
+		return "sr".equals(optString("type"));
+	}
+	
+	public boolean isVotingRound() {
+		return "vr".equals(optString("type"));
+	}
+	
+	public VotingRound getVotingRound() {
+		return new VotingRound(optJSONObject("data"));
+	}
+	
+	public Round getRound() {
+		return new Round(optJSONObject("data"));
 	}
 	
 	public ChatMessage getMessage() {

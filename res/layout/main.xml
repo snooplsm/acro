@@ -50,7 +50,7 @@
                 android:textSize="23dp" />
 
             <TextView
-                android:id="@+id/timer"
+                android:id="@+id/chat_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -121,6 +121,7 @@
         <ListView
             android:id="@+id/chat_view"
             android:layout_width="fill_parent"
+            android:background="#00FF00"
             android:layout_height="wrap_content"
             android:layout_above="@id/chat_text"
             android:layout_below="@id/subheader_container" />
@@ -130,7 +131,7 @@
         android:id="@+id/sentance_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <RelativeLayout
             android:id="@+id/header_container"
@@ -210,6 +211,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -217,25 +219,89 @@
                 android:text="General" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/acro"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/subheader_container"
+        <LinearLayout
+            android:id="@+id/acro_container"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
-            android:shadowColor="#5C0FD9"
-            android:shadowRadius="8"
-            android:text="TGFOST"
-            android:textColor="#FF0000"
-            android:textSize="33dp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/subheader_container" >
+
+            <TextView
+                android:id="@+id/acro_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:gravity="center_horizontal"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="8"
+                android:text="T"
+                android:textColor="#FF0000"
+                android:textSize="33dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/acro_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:layout_toRightOf="@id/acro_1"
+                android:gravity="center_horizontal"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="8"
+                android:text="G"
+                android:textColor="#FF0000"
+                android:textSize="33dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/acro_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:layout_toRightOf="@id/acro_2"
+                android:gravity="center_horizontal"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="8"
+                android:text="F"
+                android:textColor="#FF0000"
+                android:textSize="33dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/acro_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"                
+                android:layout_toRightOf="@id/acro_3"
+                android:gravity="center_horizontal"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="8"
+                android:text="O"
+                android:textColor="#FF0000"
+                android:textSize="33dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/acro_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:layout_toRightOf="@id/acro_4"
+                android:gravity="center_horizontal"
+                android:shadowColor="#5C0FD9"
+                android:shadowRadius="8"
+                android:text="S"
+                android:textColor="#FF0000"
+                android:textSize="33dp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/acro"
+            android:layout_below="@id/acro_container"
             android:paddingTop="15dp" >
 
             <EditText
@@ -446,7 +512,7 @@
         android:layout_height="fill_parent"
         android:visibility="gone" >
 
-       <RelativeLayout
+        <RelativeLayout
             android:id="@+id/header_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -494,15 +560,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header_container" >
-
         </RelativeLayout>
 
         <ListView
             android:id="@+id/categories"
-            android:layout_below="@id/subheader_container"
-            android:layout_alignParentBottom="true"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/subheader_container" >
         </ListView>
     </RelativeLayout>
 
