@@ -8,7 +8,7 @@
     	android:id="@+id/login_facebook"
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
-    	android:text="Log in with Facebook"
+    	android:background="@drawable/facebook_login_button"
     	android:onClick="onFacebookLoginClick"/>
     
 </LinearLayout>
