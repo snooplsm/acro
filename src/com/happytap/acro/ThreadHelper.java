@@ -8,14 +8,14 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ThreadHelper {
 
 
-private static ScheduledExecutorService POOL = Executors.newScheduledThreadPool(2);
+private static ScheduledExecutorService POOL = Executors.newScheduledThreadPool(10);
 
 
 public static ScheduledExecutorService getScheduler() {
 
 if(POOL.isShutdown() || POOL.isTerminated()){
 
-POOL = Executors.newScheduledThreadPool(2);
+POOL = Executors.newScheduledThreadPool(10);
 
 }
 

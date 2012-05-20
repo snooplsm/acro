@@ -17,6 +17,10 @@ public class Room  {
 	
 	private Map<String, Player> playerIdToPlayer = new HashMap<String,Player>();
 	
+	public int getSize() {
+		return json.optInt("player_count");
+	}
+	
 	public String getName() {
 		return json.optString("name");
 	}
@@ -44,6 +48,7 @@ public class Room  {
 	public Room(JSONObject json) {
 		super();
 		this.json = json;
+		System.out.println(json);
 		for(Player p : getPlayers()) {
 			playerIdToPlayer.put(p.getId(), p);
 		}

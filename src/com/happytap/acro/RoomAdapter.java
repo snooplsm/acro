@@ -30,6 +30,8 @@ public class RoomAdapter extends BaseAdapter {
 		};
 	};
 	
+	
+	
 	public void setData(List<Room> rooms) {
 		this.rooms = rooms;
 		handler.post(notifyData);
@@ -54,11 +56,13 @@ public class RoomAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView==null) {
-			convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, null);
+			convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_2, null);
 		}
 		TextView text = (TextView) convertView.findViewById(android.R.id.text1);
 		Room room = getItem(position);
 		text.setText(room.getName());
+		TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
+		text2.setText(String.valueOf(room.getSize()));
 		return convertView;
 	}
 

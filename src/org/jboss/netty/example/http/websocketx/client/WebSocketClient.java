@@ -169,6 +169,17 @@ import com.happytap.acro.models.Player;
 		req.put("message", message);
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
+	
+	public void submitAcronym(Player player, Room _room, String acronym) throws Exception {
+		System.out.println("submitAcronym " + acronym);
+		JSONObject req = new JSONObject();
+		req.put("type", "aa");
+		req.put("username",player.getName());
+		req.put("user_id",player.getId());
+		req.put("room",_room.getId());
+		req.put("acronym", acronym);
+		ch.write(new TextWebSocketFrame(req.toString()));
+	}
 
 	public void setCategory(String firstName, String id, Room __room,
 			String __category) throws Exception {

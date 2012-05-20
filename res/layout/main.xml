@@ -219,7 +219,7 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/acro_container"
+            android:id="@+id/acrocontainer"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
@@ -228,7 +228,7 @@
             android:layout_below="@id/subheader_container" >
 
             <TextView
-                android:id="@+id/acro_1"
+                android:id="@+id/acroone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 
@@ -241,11 +241,11 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/acro_2"
+                android:id="@+id/acrotwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 
-                android:layout_toRightOf="@id/acro_1"
+                android:layout_toRightOf="@id/acroone"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
                 android:shadowRadius="8"
@@ -255,11 +255,11 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/acro_3"
+                android:id="@+id/acrothree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 
-                android:layout_toRightOf="@id/acro_2"
+                android:layout_toRightOf="@id/acrotwo"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
                 android:shadowRadius="8"
@@ -269,10 +269,10 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/acro_4"
+                android:id="@+id/acrofour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"                
-                android:layout_toRightOf="@id/acro_3"
+                android:layout_toRightOf="@id/acrothree"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
                 android:shadowRadius="8"
@@ -282,11 +282,11 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/acro_5"
+                android:id="@+id/acrofive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 
-                android:layout_toRightOf="@id/acro_4"
+                android:layout_toRightOf="@id/acrofour"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
                 android:shadowRadius="8"
@@ -300,7 +300,7 @@
             android:id="@+id/input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/acro_container"
+            android:layout_below="@id/acrocontainer"
             android:paddingTop="15dp" >
 
             <EditText

@@ -1,6 +1,9 @@
 package com.happytap.acro;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.facebook.android.Facebook;
 import com.happytap.acro.models.Player;
@@ -10,9 +13,12 @@ public class Configuration {
   public static Player me = new Player();
   
   private Context ctx;
+  
+  private SharedPreferences prefs;
 
   public Configuration(Context ctx) {
     this.ctx = ctx;
+    this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
   }
 
   public boolean isTest() {
@@ -36,6 +42,9 @@ public class Configuration {
   }
 
   public String getServerUrl() {
+	if(!TextUtils.isEmpty(prefs.getString("server_url", null))) {
+		return prefs.getString("server_url", null);
+	}
     return ctx.getResources().getString(R.string.serverUrl);
   }
 

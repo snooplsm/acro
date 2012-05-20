@@ -37,11 +37,11 @@ public class Response extends JSONObject {
 	}
 	
 	public boolean isVotingRound() {
-		return "vr".equals(optString("type"));
+		return "aa".equals(optString("type"));
 	}
 	
 	public VotingRound getVotingRound() {
-		return new VotingRound(optJSONObject("data"));
+		return new VotingRound(optJSONArray("data"));
 	}
 	
 	public Round getRound() {
