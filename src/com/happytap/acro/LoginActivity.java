@@ -17,7 +17,7 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
-import com.happytap.acro.models.User;
+import com.happytap.acro.models.Player;
 
 public class LoginActivity extends Activity {
 
@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
   RequestListener meListener = new RequestListener() {
     
     @Override public void onComplete(String response, Object state) {
-      Configuration.me = User.parseJson(response);
+      Configuration.me = Player.parseJson(response);
       
       startAcroActivity();
     }

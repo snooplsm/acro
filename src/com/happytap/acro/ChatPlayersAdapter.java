@@ -11,19 +11,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.happytap.acro.models.User;
+import com.happytap.acro.models.Player;
 
-public class ChatUsersAdapter extends BaseAdapter {
+public class ChatPlayersAdapter extends BaseAdapter {
 
 	private Handler handler = new Handler();
 	
-	private List<User> users = new ArrayList<User>();
+	private List<Player> players = new ArrayList<Player>();
 	
 	private Room room;
 	
 	private LayoutInflater inf;
 	
-	public ChatUsersAdapter(Context context) {
+	public ChatPlayersAdapter(Context context) {
 		inf = LayoutInflater.from(context);
 	}
 	
@@ -34,21 +34,21 @@ public class ChatUsersAdapter extends BaseAdapter {
 		};
 	};
 	
-	public void setData(Room room, List<User> users) {
+	public void setData(Room room, List<Player> users) {
 		this.room = room;
-		this.users.addAll(users);
+		this.players.addAll(users);
 		handler.post(notifyData);
 	}
 
 	
 	@Override
 	public int getCount() {
-		return users.size();
+		return players.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return users.get(arg0);
+		return players.get(arg0);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class ChatUsersAdapter extends BaseAdapter {
 		} else {
 			view = convertView;
 		}
-		User user = users.get(position);
+		Player user = players.get(position);
 		TextView name = (TextView) view.findViewById(R.id.chat_user_name);
 		name.setText(user.firstName);
 		return view;

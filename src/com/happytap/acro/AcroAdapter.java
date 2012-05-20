@@ -3,9 +3,6 @@ package com.happytap.acro;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -16,11 +13,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.happytap.acro.models.Player;
+
 public class AcroAdapter extends BaseAdapter {
 
 	private Context context;
 
-	private String myUserId = "1";
+	
+	private Player player;
 
 	private String myVote = "2";
 	
@@ -39,8 +39,8 @@ public class AcroAdapter extends BaseAdapter {
 		};
 	};
 
-	public void setData(String myUserId, String myVote, List<Acronym> acronyms, State state) {
-		this.myUserId = myUserId;
+	public void setData(Player player, String myVote, List<Acronym> acronyms, State state) {
+		this.player = player;
 		this.myVote = myVote;
 		this.acronyms = acronyms;
 		this.state = state;
@@ -88,7 +88,7 @@ public class AcroAdapter extends BaseAdapter {
 		username.setText(acro.getUsername());
 		text.setText(acro.getText());
 		fav.setImageResource(android.R.drawable.star_big_on);
-		if (myUserId.equals(acro.getUserId())) {
+		if (player.getId().equals(acro.getUserId())) {
 			text.setTextColor(Color.RED);
 			fav.setImageDrawable(null);
 		} else {

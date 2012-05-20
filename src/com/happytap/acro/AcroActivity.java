@@ -60,7 +60,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	ChatAdapter _chatAdapter;
 	
-	ChatUsersAdapter _chatUsersAdapter;
+	ChatPlayersAdapter _chatPlayersAdapter;
 
 	View _chatRound;
 
@@ -397,7 +397,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			}
 			if(showUsers) {
 				//switch to chat
-				_chatList.setAdapter(_chatUsersAdapter);
+				_chatList.setAdapter(_chatPlayersAdapter);
 			} else {
 				//switch to users
 				_chatList.setAdapter(_chatAdapter);
@@ -453,7 +453,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
 		_otherChat = findView(R.id.chat_list);
-		_chatUsersAdapter = new ChatUsersAdapter(this);
+		//_chatUsersAdapter = new ChatUsersAdapter(this);
+		_chatPlayersAdapter = new ChatPlayersAdapter(this);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_otherChat.setAdapter(_chatAdapter);
 		_joinRoomRound = findView(R.id.join_room);
@@ -568,7 +569,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	public void onVotesIn(List<Acronym> acronyms) {
 		_acronyms = acronyms;
-		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 	public void onVotingRoundOver() {
@@ -617,7 +618,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		__state = State.RESULTS;
 		_acros.setOnItemClickListener(null);
-		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 	private void requestRoomList() {
@@ -716,6 +717,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_root.invalidate();
 		_progress.setProgress(0);
 		_timer.setText(String.valueOf(_config.getSecondsPerRound()));
+
+		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
+				.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
+						TimeUnit.MILLISECONDS);
 	}
 	
 	private Runnable _startSentenceRoundRunnable = new Runnable() {
@@ -811,7 +816,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
 		_acros.setOnItemClickListener(this);
 		__state = State.VOTING;
 		_votingProgress.setProgress(0);
@@ -829,7 +834,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			return;
 		}
 		Configuration.me.voteForAcronymId = acronym.getUserId();
-		_adapter.setData(Configuration.me.id, Configuration.me.voteForAcronymId, _acronyms, __state);
+		_adapter.setData(Configuration.me, Configuration.me.voteForAcronymId, _acronyms, __state);
 	}
 
 	@Override
