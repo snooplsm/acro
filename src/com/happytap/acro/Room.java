@@ -9,6 +9,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.happytap.acro.models.Player;
+
 public class Room  {
 
 	private JSONObject json;
@@ -34,7 +36,7 @@ public class Room  {
 		}
 		List<Player> players = new ArrayList<Player>(_players.length());
 		for(int i = 0; i < _players.length(); i++) {
-			players.add(new Player(_players.optJSONObject(i)));
+			players.add(Player.parseJson(_players.optJSONObject(i).toString()));
 		}
 		return players;
 	}

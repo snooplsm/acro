@@ -3,6 +3,8 @@ package com.happytap.acro;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.happytap.acro.models.Player;
+
 import android.content.Context;
 import android.os.Handler;
 import android.text.Html;

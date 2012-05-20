@@ -1,15 +1,13 @@
 package com.happytap.acro;
 
 import android.content.Context;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 
 import com.facebook.android.Facebook;
-import com.happytap.acro.models.User;
+import com.happytap.acro.models.Player;
 
 public class Configuration {
 
-  public static User me = new User();
+  public static Player me = new Player();
   
   private Context ctx;
 

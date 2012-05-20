@@ -54,7 +54,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	ChatAdapter _chatAdapter;
 	
-	ChatUsersAdapter _chatUsersAdapter;
+	ChatPlayersAdapter _chatPlayersAdapter;
 
 	View _chatRound;
 
@@ -101,7 +101,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _joinRoomRequest = new Runnable() {
 		public void run() {
 			try {
-				_client.joinRoom(Configuration.me.id, __room);
+				_client.joinRoom(Configuration.me, __room);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -378,7 +378,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			}
 			if(showUsers) {
 				//switch to chat
-				_chatList.setAdapter(_chatUsersAdapter);
+				_chatList.setAdapter(_chatPlayersAdapter);
 			} else {
 				//switch to users
 				_chatList.setAdapter(_chatAdapter);
@@ -430,7 +430,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chat = findView(R.id.chat);
 		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
-		_chatUsersAdapter = new ChatUsersAdapter(this);
+		_chatPlayersAdapter = new ChatPlayersAdapter(this);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_joinRoomRound = findView(R.id.join_room);
 		_resultsRound = findView(R.id.results_round);
@@ -457,7 +457,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		//startSentenceRound();
 		// startConnectionToServer();
 		// startJoinRoomRound();
-		//startSentenceRound();
+		startSentenceRound();
 		// startJoinRoomRound();
 		// startLoginRound();
 		//startChooseCategoryRound();
@@ -633,9 +633,9 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_root.invalidate();
 		_progress.setProgress(0);
 		_timer.setText(String.valueOf(_config.getSecondsPerRound()));
-		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
-				.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
-						TimeUnit.MILLISECONDS);
+//		_sentenceRoundRunnableFuture = ThreadHelper.getScheduler()
+//				.scheduleAtFixedRate(_sentanceRoundRunnable, 0, 100,
+//						TimeUnit.MILLISECONDS);
 	}
 
 	private MenuItem _restart;
