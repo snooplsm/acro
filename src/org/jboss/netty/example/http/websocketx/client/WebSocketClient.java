@@ -149,11 +149,12 @@ import com.happytap.acro.Room;
  	   ch.write(new TextWebSocketFrame(req.toString()));
 	}
 
-	public void joinRoom(String username, Room _room) throws Exception {
+	public void joinRoom(String username, String userId, Room _room) throws Exception {
 		JSONObject req = new JSONObject();
 		req.put("type","jr");
 		req.put("username", username);
 		req.put("room", _room.getId());
+		
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
 	

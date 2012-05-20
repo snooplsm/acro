@@ -57,11 +57,4 @@ public class Configuration {
     return ctx.getResources().getBoolean(R.bool.log);
   }
 
-  public void setFacebook(Facebook facebook) {
-    Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-    editor.putLong("fb_expires", facebook.getAccessExpires());
-    editor.putString("fb_token", facebook.getAccessToken());
-    editor.commit();
-  }
-
 }

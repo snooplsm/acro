@@ -59,6 +59,8 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	VotingRound __votingRound;
 
 	ChatAdapter _chatAdapter;
+	
+	ChatUsersAdapter _chatUsersAdapter;
 
 	View _chatRound;
 
@@ -395,10 +397,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			}
 			if(showUsers) {
 				//switch to chat
-				_chatList.setAdapter(null);
+				_chatList.setAdapter(_chatUsersAdapter);
 			} else {
 				//switch to users
-				_chatList.setAdapter(null);
+				_chatList.setAdapter(_chatAdapter);
 			}
 			_chat.invalidate();
 		} else {
@@ -451,6 +453,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_chat.setOnClickListener(this);
 		_chatList = findView(R.id.chat_view);
 		_otherChat = findView(R.id.chat_list);
+		_chatUsersAdapter = new ChatUsersAdapter(this);
 		_chatList.setAdapter(_chatAdapter = new ChatAdapter(this));
 		_otherChat.setAdapter(_chatAdapter);
 		_joinRoomRound = findView(R.id.join_room);
