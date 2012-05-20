@@ -121,7 +121,6 @@
         <ListView
             android:id="@+id/chat_view"
             android:layout_width="fill_parent"
-            android:background="#00FF00"
             android:layout_height="wrap_content"
             android:layout_above="@id/chat_text"
             android:layout_below="@id/subheader_container" />

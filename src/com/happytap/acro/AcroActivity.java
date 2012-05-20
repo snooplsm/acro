@@ -107,7 +107,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _joinRoomRequest = new Runnable() {
 		public void run() {
 			try {
-				_client.joinRoom(Configuration.me.id, __room);
+				_client.joinRoom(Configuration.me, __room);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -59,6 +59,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
 import org.json.JSONObject;
 
 import com.happytap.acro.Room;
+import com.happytap.acro.models.User;
    
    public class WebSocketClient {
    
@@ -149,12 +150,14 @@ import com.happytap.acro.Room;
  	   ch.write(new TextWebSocketFrame(req.toString()));
 	}
 
-	public void joinRoom(String username, String userId, Room _room) throws Exception {
+	
+	public void joinRoom(User user, Room _room) throws Exception {
 		JSONObject req = new JSONObject();
 		req.put("type","jr");
-		req.put("username", username);
-		req.put("room", _room.getId());
-		
+		req.put("username", user.firstName);
+        req.put("avatar_url", user.avatarUrl);
+        req.put("user_id", user.id);
+		req.put("room", _room.getId());		
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
 	
