@@ -63,5 +63,13 @@ public class Room  {
 	public Player getPlayer(String playerId) {
 		return playerIdToPlayer.get(playerId);
 	}
+
+  public CharSequence getHumanizedPlayersCount() {
+    if (getPlayers().size() > 1) {
+      return "" + getPlayers().size() + " players";
+    } else {
+      return "" + getPlayers().size() + " player";
+    }
+  }
 	
 }

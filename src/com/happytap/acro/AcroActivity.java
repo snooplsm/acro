@@ -63,6 +63,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	ChatPlayersAdapter _chatPlayersAdapter;
 
 	View _chatRound;
+	TextView _playersCount;
 
 	View _root;
 
@@ -120,6 +121,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	private Runnable _onChatRoundRunnable = new Runnable() {
 		public void run() {
+	        _playersCount.setText(__room.getHumanizedPlayersCount());
 			startChatRound();
 		};
 	};
@@ -447,6 +449,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		_socketDroppedRound = findView(R.id.socket_dropped_round);
 		_socketDroppedRound.setOnClickListener(this);
 		_chatRound = findView(R.id.chat_round);
+		_playersCount = (TextView) findViewById(R.id.players_count);
 		_chatText = findView(R.id.chat_text);
 		_chatText.setOnKeyListener(this);
 		_chat = findView(R.id.chat);
@@ -525,6 +528,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	public void onJoinRoom(Room room) {
 		__room = room;
 		runOnUiThread(_onChatRoundRunnable);
+		_chatPlayersAdapter.setData(__room);
 	}
 
 	@Override

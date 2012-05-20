@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,9 @@ public class ChatPlayersAdapter extends BaseAdapter {
 		};
 	};
 	
-	public void setData(Room room, List<Player> users) {
+	public void setData(Room room) {
 		this.room = room;
-		this.players.addAll(users);
+		this.players.addAll(room.getPlayers());
 		handler.post(notifyData);
 	}
 

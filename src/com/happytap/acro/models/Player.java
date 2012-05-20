@@ -16,13 +16,14 @@ public class Player {
   }
 
   public String id = UUID.randomUUID().toString();
+  public String fbid = "";
   public String voteForAcronymId = "";
   public String name = "";
   public String firstName = "Anonymous";
   public String avatarUrl;
 
   public String avatarUrl() {
-    return "http://graph.facebook.com/" + id + "/picture?type=large";
+    return "http://graph.facebook.com/" + fbid + "/picture?type=large";
   }
 
   public static Player parseFacebookJson(String response) {
@@ -47,6 +48,7 @@ public class Player {
       ret.name = data.getString("name");
       ret.firstName = data.getString("username");
       ret.id = data.getString("user_id");
+      ret.fbid = data.getString("fbid");
     } catch (JSONException e) {
       e.printStackTrace();
     }
