@@ -185,6 +185,39 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 			}
 		};
 	};
+
+	int retryReconnections = 0;
+  
+    Runnable _retryWebSocketRunnable = new Runnable() {
+      public void run() {
+        while (retryReconnections < 5) {
+          try {
+            _client.connect();
+          } catch (Exception e) {
+          }
+  
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+  
+          retryReconnections++;
+        }
+  
+      };
+    };
+    
+
+    Future<?> _retryRunnableFuture;
+    
+    private void startRetryWebSocket() {
+        if (_retryRunnableFuture != null) {
+            _retryRunnableFuture.cancel(true);
+        }
+        _retryRunnableFuture = ThreadHelper.getScheduler().submit(
+                _retryWebSocketRunnable);
+    }
 	
 	Runnable _sendCategory = new Runnable() {
 		public void run() {
@@ -228,9 +261,16 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	Runnable _socketDroppedRunnable = new Runnable() {
 		public void run() {
 			
-			//_socketDroppedRound.setVisibility(View.VISIBLE);
+			_socketDroppedRound.setVisibility(View.VISIBLE);
 		};
 	};
+
+    Runnable _socketUpRunnable = new Runnable() {
+        public void run() {
+            
+            _socketDroppedRound.setVisibility(View.GONE);
+        };
+    };
 
 	TextView _timer;
 
@@ -412,6 +452,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	public void onConnected() {
 		//runOnUiThread(_onChatRoundRunnable);
 		runOnUiThread(_onUiJoinRoomRunnable);
+		runOnUiThread(_socketUpRunnable);
 		//runOnUiThread(_joinRoomRound);
 		//startJoinRoomRound();
 		//startChatRound();
@@ -491,9 +532,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	}
 
 	@Override
-	public void onDisconnected() {
-		runOnUiThread(_socketDroppedRunnable);
-	}
+   public void onDisconnected() {
+      runOnUiThread(_socketDroppedRunnable);
+      startRetryWebSocket();
+    }
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View arg1, int position,
