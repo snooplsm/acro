@@ -27,6 +27,10 @@ public class Player {
 	public int getCurrentRoundVoteCount() {
 		return currentRoundVoteCount;
 	}
+	
+	public int getTotalVoteCount() {
+		return totalVoteCount;
+	}
 
 	public String avatarUrl() {
 		return "http://graph.facebook.com/" + fbid + "/picture?type=large";

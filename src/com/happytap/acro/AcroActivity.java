@@ -731,11 +731,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	private Runnable _updateAnswerCount = new Runnable() {
 		public void run() {
-			if(_answerCount>0) {
-				_answersContainer.setVisibility(View.VISIBLE);
-			} else {
-				_answersContainer.setVisibility(View.INVISIBLE);
-			}
+			_answersContainer.setVisibility(View.VISIBLE);			
 			_answerCountText.setText(String.valueOf(_answerCount));
 			FlipAnimator animator = new FlipAnimator(_answersAcceptedTitle, _answersAcceptedTitle, _answersAcceptedTitle.getWidth()/2, _answersAcceptedTitle.getHeight()/2);
 			_answersContainer.startAnimation(animator);
@@ -941,10 +937,10 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 	private void startSentenceRound() {
 		killAllTasks();
 		hideAllViews();
-		_answerCount = 0;
-		_answersContainer.setVisibility(View.INVISIBLE);
+		_answerCount = 0;				
 		_acroInput.setText("");
 		Configuration.me.voteForAcronymId="";
+		_answerCountText.setText("0");
 		_sentenceRound.setVisibility(View.VISIBLE);
 		if (__round != null) {
 			String size = __round.getAcronym().length() + " Letter Round";

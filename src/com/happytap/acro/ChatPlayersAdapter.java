@@ -37,6 +37,7 @@ public class ChatPlayersAdapter extends BaseAdapter {
 	
 	public void setData(Room room) {
 		this.room = room;
+		this.players.clear();
 		this.players.addAll(room.getPlayers());
 		handler.post(notifyData);
 	}
@@ -68,7 +69,7 @@ public class ChatPlayersAdapter extends BaseAdapter {
 		}
 		Player user = players.get(position);
 		TextView name = (TextView) view.findViewById(R.id.chat_user_name);
-		name.setText(user.firstName);
+		name.setText(user.firstName + " (" + user.getTotalVoteCount() + ")");
 		return view;
 	}
 

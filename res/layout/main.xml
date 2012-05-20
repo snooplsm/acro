@@ -212,7 +212,7 @@
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="2"
+                    android:text="0"
                     android:textSize="80dp" />
 
                 <TextView
