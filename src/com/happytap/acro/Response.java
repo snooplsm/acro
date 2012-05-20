@@ -49,6 +49,14 @@ public class Response extends JSONObject {
 		return "vc".equals(optString("type"));
 	};
 	
+	public boolean isAnswerCount() {
+		return "ac".equals(optString("type"));
+	}
+	
+	public int getAnswerCount() {
+		return optInt("data");
+	}
+	
 	public VotingRound getVoteCounts() {
 		return new VotingRound(optJSONArray("data"));
 	}

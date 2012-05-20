@@ -1,6 +1,7 @@
 package com.happytap.acro;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -31,6 +32,11 @@ public class AcroAdapter extends BaseAdapter {
 	public enum State {
 		VOTING,
 		RESULTS
+	}
+	
+	public void clear() {
+		this.acronyms = Collections.emptyList();
+		handler.post(notifyData);
 	}
 
 	private Runnable notifyData = new Runnable() {

@@ -97,6 +97,10 @@ import com.happytap.acro.models.Player;
           });
        }
        
+       public void disconnect() throws Exception {
+    	   ch.disconnect();
+       }
+       
        public void connect() throws Exception {
     	   ChannelFuture future =
                    bootstrap.connect(
@@ -148,6 +152,15 @@ import com.happytap.acro.models.Player;
  	   JSONObject req = new JSONObject();
  	   req.put("type", "rl");
  	   ch.write(new TextWebSocketFrame(req.toString()));
+	}
+	
+	public void leaveRoom(Player player, Room room) throws Exception {
+		System.out.println("leave room");
+		JSONObject req = new JSONObject();
+		req.put("type", "lv");
+		req.put("user_id", player.getId());
+		req.put("room", room.getId());
+		ch.write(new TextWebSocketFrame(req.toString()));
 	}
 
 	public void joinRoom(Player player, Room _room) throws Exception {

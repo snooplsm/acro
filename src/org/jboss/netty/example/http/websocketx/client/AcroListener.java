@@ -25,4 +25,6 @@ public interface AcroListener {
 
 	void onStartVotingResultsRound(VotingRound voteCounts);
 
+	void onAnswerCount(int answerCount);
+
 }

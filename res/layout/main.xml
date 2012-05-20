@@ -35,83 +35,36 @@
         android:visibility="gone" >
 
         <RelativeLayout
-            android:id="@+id/header_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" >
-
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="7 Letter Round"
-                android:textSize="23dp" />
-
-            <TextView
-                android:id="@+id/chat_timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:padding="10dp"
-                android:shadowColor="#5C0FD9"
-                android:shadowRadius="5"
-                android:text="60"
-                android:textColor="#FF0000"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/timer"
-                android:layout_toRightOf="@id/info"
-                android:indeterminate="false"
-                android:max="60000"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:progress="0" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/subheader_container"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header_container" >
-	
-			<TextView
-				android:id="@+id/players_count"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingLeft="5dp"
-				android:shadowColor="#000000"
-				android:shadowRadius="3"
-				android:textSize="12dp"
-				android:text="0 players" />
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/players_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:shadowColor="#000000"
+                android:shadowRadius="3"
+                android:text="0 players"
+                android:textSize="12dp" />
 
             <RelativeLayout
-                android:id="@+id/answers"
+                android:id="@+id/answerz"
                 android:layout_width="100dp"
-                android:layout_height="60dp" >
+                android:layout_height="80dp" >
 
                 <TextView
-                    android:id="@+id/answers_accepted_title"
+                    android:id="@+id/answers_acceptedd_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
                     android:gravity="bottom"
                     android:paddingLeft="5dp"
                     android:shadowColor="#000000"
                     android:shadowRadius="3"
-                    android:text="Waiting for round to end..."
+                    android:text="Waiting for players..."
                     android:textSize="10dp" />
-                                        
             </RelativeLayout>
 
             <TextView
@@ -125,27 +78,84 @@
         <EditText
             android:id="@+id/chat_text"
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />
+
+        <RelativeLayout            
+            android:id="@+id/chaty"
+            android:layout_width="20dp"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/chat_text"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/subheader_container"
+            android:layout_centerVertical="true"
+            android:background="#666"
+            android:orientation="vertical" >
+            
+            <LinearLayout
+                android:id="@+id/chat"
+                android:orientation="vertical" 
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="U" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="S" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="E" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="R" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="S" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <ListView
             android:id="@+id/chat_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/chat_text"
-            android:layout_below="@id/subheader_container" />
+            android:layout_below="@id/subheader_container"
+            android:layout_toLeftOf="@id/chaty" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/sentance_round"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <RelativeLayout
             android:id="@+id/header_container"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:visibility="visible" >
 
             <TextView
                 android:id="@+id/info"
@@ -154,7 +164,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="7 Letter Round"
-                android:textSize="23dp" />
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/timer"
@@ -193,7 +203,7 @@
             <RelativeLayout
                 android:id="@+id/answers"
                 android:layout_width="100dp"
-                android:layout_height="60dp" >
+                android:layout_height="80dp" >
 
                 <TextView
                     android:id="@+id/answers_accepted"
@@ -202,21 +212,19 @@
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="1"
+                    android:text="2"
                     android:textSize="80dp" />
 
                 <TextView
                     android:id="@+id/answers_accepted_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="bottom"
-                    android:paddingBottom="10dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:shadowColor="#000000"
                     android:shadowRadius="3"
                     android:text="Answers Accepted"
-                    android:textSize="10dp" />
+                    android:textSize="11dp" />
             </RelativeLayout>
 
             <TextView
@@ -231,17 +239,16 @@
         <LinearLayout
             android:id="@+id/acrocontainer"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subheader_container"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@id/subheader_container" >
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/acroone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
                 android:shadowRadius="8"
@@ -254,7 +261,6 @@
                 android:id="@+id/acrotwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:layout_toRightOf="@id/acroone"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
@@ -268,7 +274,6 @@
                 android:id="@+id/acrothree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:layout_toRightOf="@id/acrotwo"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
@@ -281,7 +286,7 @@
             <TextView
                 android:id="@+id/acrofour"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"                
+                android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/acrothree"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
@@ -295,7 +300,6 @@
                 android:id="@+id/acrofive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:layout_toRightOf="@id/acrofour"
                 android:gravity="center_horizontal"
                 android:shadowColor="#5C0FD9"
@@ -397,7 +401,7 @@
             android:visibility="visible" >
 
             <TextView
-                android:id="@+id/info"
+                android:id="@+id/infoz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -425,7 +429,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/voting_timer"
-                android:layout_toRightOf="@id/info"
+                android:layout_toRightOf="@id/infoz"
                 android:indeterminate="false"
                 android:max="45000"
                 android:paddingLeft="3dp"
@@ -585,6 +589,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

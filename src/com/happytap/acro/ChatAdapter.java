@@ -1,6 +1,7 @@
 package com.happytap.acro;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.happytap.acro.models.Player;
@@ -28,6 +29,10 @@ public class ChatAdapter extends BaseAdapter {
 		inf = LayoutInflater.from(context);
 	}
 	
+	public void clear() {
+		this.messages = Collections.emptyList();
+		handler.post(notifyData);
+	}
 	
 	private Runnable notifyData = new Runnable() {
 		public void run() {

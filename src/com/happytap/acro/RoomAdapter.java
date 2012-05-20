@@ -30,6 +30,11 @@ public class RoomAdapter extends BaseAdapter {
 		};
 	};
 	
+	public void clear() {
+		rooms = Collections.emptyList();
+		
+		handler.post(notifyData);
+	}
 	
 	
 	public void setData(List<Room> rooms) {

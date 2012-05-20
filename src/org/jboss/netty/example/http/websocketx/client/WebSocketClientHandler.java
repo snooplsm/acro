@@ -111,6 +111,8 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 		Response response = new Response(text);
 		if (response.isMessage()) {
 			listener.onMessage(response.getMessage());
+		} else if (response.isAnswerCount()) {
+			listener.onAnswerCount(response.getAnswerCount());
 		} else if (response.isJoinRoomResponse()) {
 			listener.onJoinRoom(response.getRoom());
 		} else if (response.isRoomListResponse()) {
