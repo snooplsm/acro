@@ -3,10 +3,11 @@ package com.happytap.acro;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.happytap.acro.models.Player;
@@ -29,15 +30,25 @@ public class Room  {
 		return json.optBoolean("is_adult");
 	}
 	
-	public List<Player> getPlayers() {	
-		JSONArray _players = json.optJSONArray("players");
+	public List<Player> getPlayers() {
+		JSONObject _players = json.optJSONObject("players");
 		if(_players==null) {
 			return Collections.emptyList();
 		}
+		
 		List<Player> players = new ArrayList<Player>(_players.length());
-		for(int i = 0; i < _players.length(); i++) {
-			players.add(Player.parseJson(_players.optJSONObject(i).toString()));
+		
+		Iterator<String> keys = _players.keys();
+		
+		while (keys.hasNext()) {
+		  String id = keys.next();
+		  try {
+            players.add(Player.parseJson(id, (JSONObject) _players.get(id)));
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
 		}
+		
 		return players;
 	}
 

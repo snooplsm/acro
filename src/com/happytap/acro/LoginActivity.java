@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
   RequestListener meListener = new RequestListener() {
     
     @Override public void onComplete(String response, Object state) {
-      Configuration.me = Player.parseJson(response);
+      Configuration.me = Player.parseFacebookJson(response);
       
       startAcroActivity();
     }
