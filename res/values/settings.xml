@@ -2,13 +2,13 @@
 <resources>
 
 	<item name="isTest" type="bool">true</item>
-	<item name="secondsPerRound" type="integer">20</item>
+	<item name="secondsPerRound" type="integer">40</item>
 	<item name="secondsPerVotingRound" type="integer">20</item>
 	<item name="secondsPerResultsRound" type="integer">15</item>
 	<item name="secondsPerChooseCategoryRound" type="integer">10</item>
 	<string name="serverUrl">ws://technically.us:8080/websocket</string>
-	<string name="facebookAppId">135742016560988</string>
-	<string name="facebookAppSecret">ee70cce63d156cbf177721b1412e5a31</string>
+	<string name="facebookAppId">196086513846884</string>
+	<string name="facebookAppSecret">ae601b773664627c0c29b4c02ebb4400</string>
 	<item name="log" type="bool">false</item>
 	    
 </resources>

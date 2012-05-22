@@ -348,6 +348,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_below="@id/input" >
 

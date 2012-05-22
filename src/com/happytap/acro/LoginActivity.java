@@ -117,7 +117,6 @@ public class LoginActivity extends Activity {
 		public void onComplete(String response, Object state) {
 			mPrefs.edit().putString("me", response).commit();
 			Configuration.me = Player.parseFacebookJson(response);
-
 			startAcroActivity();
 		}
 

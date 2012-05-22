@@ -70,7 +70,6 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e)
 			throws Exception {
-		System.out.println("WebSocket Client disconnected!");
 		listener.onDisconnected();
 	}
 
@@ -80,7 +79,6 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 		Channel ch = ctx.getChannel();
 		if (!handshaker.isHandshakeComplete()) {
 			handshaker.finishHandshake(ch, (HttpResponse) e.getMessage());
-			System.out.println("WebSocket Client connected!");
 			listener.onConnected();
 			return;
 		}
@@ -95,13 +93,9 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 		WebSocketFrame frame = (WebSocketFrame) e.getMessage();
 		if (frame instanceof TextWebSocketFrame) {
 			TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-			System.out.println("WebSocket Client received message: "
-					+ textFrame.getText());
 			handleMessage(textFrame.getText());
 		} else if (frame instanceof PongWebSocketFrame) {
-			System.out.println("WebSocket Client received pong");
 		} else if (frame instanceof CloseWebSocketFrame) {
-			System.out.println("WebSocket Client received closing");
 			ch.close();
 			listener.onDisconnected();
 		}
@@ -109,6 +103,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 
 	private void handleMessage(String text) throws Exception {
 		Response response = new Response(text);
+		System.out.println(response);
 		if (response.isMessage()) {
 			listener.onMessage(response.getMessage());
 		} else if (response.isAnswerCount()) {

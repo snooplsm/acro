@@ -77,7 +77,6 @@ public class AcroAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		System.out.println(state);
 		final View view;
 		if (convertView == null) {
 			view = LayoutInflater.from(context).inflate(
@@ -111,7 +110,7 @@ public class AcroAdapter extends BaseAdapter {
 			username.setVisibility(View.GONE);
 		}
 		if(State.RESULTS==state) {
-			index.setVisibility(View.INVISIBLE);
+			index.setVisibility(View.VISIBLE);
 			index.setText(String.valueOf(acro.getVoteCount()));
 			username.setText(acro.getPlayer().getName());
 			username.setVisibility(View.VISIBLE);

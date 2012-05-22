@@ -111,7 +111,6 @@ import com.happytap.acro.models.Player;
        }
        
        public void autoJoin(String username) throws Exception {
-    	   System.out.println("autojoining");
     	   JSONObject req = new JSONObject();
     	   req.put("type", "aj");
     	   req.put("username",username);
@@ -123,17 +122,15 @@ import com.happytap.acro.models.Player;
            try {
                    
               // Send 10 messages and wait for responses
-              System.out.println("WebSocket Client sending message");
               for (int i = 0; i < 10; i++) {
                   ch.write(new TextWebSocketFrame("Message #" + i));
               }
       
               // Ping
-              System.out.println("WebSocket Client sending ping");
               ch.write(new PingWebSocketFrame(ChannelBuffers.copiedBuffer(new byte[]{1, 2, 3, 4, 5, 6})));
       
               // Close
-              System.out.println("WebSocket Client sending close");
+
               ch.write(new CloseWebSocketFrame());
       
               // WebSocketClientHandler will close the connection when the server
@@ -148,14 +145,12 @@ import com.happytap.acro.models.Player;
       }
 
 	public void requestRoomsList() throws Exception {
- 	   System.out.println("requesting rooms list");
  	   JSONObject req = new JSONObject();
  	   req.put("type", "rl");
  	   ch.write(new TextWebSocketFrame(req.toString()));
 	}
 	
 	public void leaveRoom(Player player, Room room) throws Exception {
-		System.out.println("leave room");
 		JSONObject req = new JSONObject();
 		req.put("type", "lv");
 		req.put("user_id", player.getId());
@@ -183,8 +178,7 @@ import com.happytap.acro.models.Player;
 		ch.write(new TextWebSocketFrame(req.toString()));
 	}
 	
-	public void submitAcronym(Player player, Room _room, String acronym) throws Exception {
-		System.out.println("submitAcronym " + acronym);
+	public void submitAcronym(Player player, Room _room, String acronym) throws Exception {		
 		JSONObject req = new JSONObject();
 		req.put("type", "aa");
 		req.put("username",player.getName());
@@ -196,7 +190,6 @@ import com.happytap.acro.models.Player;
 
 	public void setCategory(String firstName, String id, Room __room,
 			String __category) throws Exception {
-		System.out.println("set category");
 		JSONObject req = new JSONObject();
 		req.put("type", "c");
 		req.put("username", firstName);
