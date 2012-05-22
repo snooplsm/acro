@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:gravity="center">
-    
-    <Button
-    	android:id="@+id/login_facebook"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:background="@drawable/facebook_login_button"
-    	android:onClick="onFacebookLoginClick"/>
-    
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:background="@drawable/login_background"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/login_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/logo_facebook_text"
+            android:onClick="onFacebookLoginClick" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/login_facebook"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_weight="1"
+        android:background="@drawable/login_background_twitter" >
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_sign_up_larry"
+            />
+    </RelativeLayout>
 </LinearLayout>
