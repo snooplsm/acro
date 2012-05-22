@@ -9,6 +9,8 @@
 	<string name="serverUrl">ws://technically.us:8080/websocket</string>
 	<string name="facebookAppId">196086513846884</string>
 	<string name="facebookAppSecret">ae601b773664627c0c29b4c02ebb4400</string>
+	<string name="twitterKey">EO7qq8tD1Rr3vo1oRiMSA</string>
+	<string name="twitterSecret">1Xape9KkEDrXoziTthtqLf8ERWp7bHJCnWOSAmzqZlE</string>
 	<item name="log" type="bool">false</item>
 	    
 </resources>

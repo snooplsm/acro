@@ -55,6 +55,14 @@ public class Configuration {
   public String getFacebookAppSecret() {
     return ctx.getResources().getString(R.string.facebookAppSecret);
   }
+  
+  public String getTwitterKey() {
+	  return ctx.getResources().getString(R.string.twitterKey);
+  }
+  
+  public String getTwitterSecret() {
+	  return ctx.getResources().getString(R.string.twitterSecret);
+  }
 
   public Facebook getFacebook() {
     return null;

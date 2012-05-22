@@ -4,12 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import net.londatiga.android.TwitterApp;
+import net.londatiga.android.TwitterApp.TwDialogListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -19,21 +24,27 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.happytap.acro.models.Player;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements OnClickListener {
 
 	Facebook facebook;
+	TwitterApp twitter;
 	AsyncFacebookRunner mAsyncRunner;
 	Configuration configuration;
 
 	private ProgressDialog progressDialog;
 
 	private SharedPreferences mPrefs;
+	
+	View loginFacebook,loginTwitter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		
+		loginFacebook = findViewById(R.id.login_facebook);
+		loginTwitter = findViewById(R.id.login_twitter);
+		loginFacebook.setOnClickListener(this);
+		loginTwitter.setOnClickListener(this);
 		mPrefs = getPreferences(MODE_PRIVATE);
 		configuration = new Configuration(this);
 		if(mPrefs.contains("me")) {
@@ -47,6 +58,8 @@ public class LoginActivity extends Activity {
 		}
 
 		facebook = new Facebook(configuration.getFacebookAppId());
+		twitter = new TwitterApp(this, configuration.getTwitterKey(), configuration.getTwitterSecret());
+		twitter.setListener(twitterListener);
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
 
 		
@@ -110,6 +123,20 @@ public class LoginActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		facebook.authorizeCallback(requestCode, resultCode, data);
 	}
+	
+	TwDialogListener twitterListener = new TwDialogListener() {
+		@Override
+		public void onComplete(String value) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public void onError(String value) {
+			if(!TextUtils.isEmpty(value)) {
+				Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT);
+			}
+		};
+	};
 
 	RequestListener meListener = new RequestListener() {
 
@@ -143,5 +170,15 @@ public class LoginActivity extends Activity {
 		}
 
 	};
+
+	@Override
+	public void onClick(View v) {
+		if(v==loginFacebook) {
+			onFacebookLoginClick(v);
+		}else
+		if(v==loginTwitter) {
+			twitter.authorize();
+		}
+	}
 
 }
