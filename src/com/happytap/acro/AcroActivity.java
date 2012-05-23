@@ -11,14 +11,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.jboss.netty.example.http.websocketx.client.AcroListener;
 import org.jboss.netty.example.http.websocketx.client.WebSocketClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -101,7 +100,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 
 	ProgressBar _progress;
 
-	MenuItem _restart,_configR;
+	MenuItem _restart,_configR, _clear;
 
 	ProgressBar _resultsProgress;
 
@@ -776,6 +775,7 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		if (_config.isTest()) {
 			_restart = menu.add("Restart");
 			_configR = menu.add("Config");
+			_clear = menu.add("Clear");
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -850,6 +850,12 @@ public class AcroActivity extends Activity implements OnItemClickListener,
 		}
 		if (_configR.equals(item)) {
 			startActivity(new Intent(this, ConfigActivity.class));
+		}
+		if (_clear.equals(item)) {
+			PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+			Intent i = new Intent(this,LoginActivity.class);
+			startActivity(i);
+			finish();
 		}
 		return super.onOptionsItemSelected(item);
 	}

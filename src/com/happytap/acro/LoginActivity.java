@@ -6,11 +6,17 @@ import java.net.MalformedURLException;
 
 import net.londatiga.android.TwitterApp;
 import net.londatiga.android.TwitterApp.TwDialogListener;
+
+import org.json.JSONObject;
+
+import twitter4j.User;
+import twitter4j.UserJSONImpl;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +28,9 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.happytap.acro.models.Player;
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -36,6 +45,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private SharedPreferences mPrefs;
 	
 	View loginFacebook,loginTwitter;
+	
+	Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +56,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		loginTwitter = findViewById(R.id.login_twitter);
 		loginFacebook.setOnClickListener(this);
 		loginTwitter.setOnClickListener(this);
-		mPrefs = getPreferences(MODE_PRIVATE);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		configuration = new Configuration(this);
 		if(mPrefs.contains("me")) {
 			try {
@@ -54,6 +65,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 				return;
 			} catch (Exception e) {
 				
+			}
+		}
+		if(mPrefs.contains("twitter")) {
+			try {
+				Configuration.me = Player.parseTwitter(gson.fromJson(mPrefs.getString("twitter", null),TwitterUser.class));
+				Player p = Configuration.me;
+				startAcroActivity();
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -125,9 +146,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 	
 	TwDialogListener twitterListener = new TwDialogListener() {
-		@Override
+	
+		
 		public void onComplete(String value) {
-			// TODO Auto-generated method stub
+			
+		};
+		
+		public void onUser(User user) {
+			mPrefs.edit().putString("twitter", gson.toJson(user)).commit();
+			LoginActivity.this.startAcroActivity();
 			
 		}
 		
